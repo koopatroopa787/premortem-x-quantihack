@@ -13,9 +13,9 @@ from typing import Any, Dict, List, Optional
 _HERE = os.path.dirname(os.path.abspath(__file__))
 FDA_HISTORICAL_PATH  = os.path.join(_HERE, "..", "store", "fda_historical.json")
 BACKTEST_CACHE_PATH  = os.path.join(_HERE, "..", "store", "backtest_cache.json")
-COMPANIES_PATH       = os.path.join(_HERE, "..", "..", "companies.json")
+COMPANIES_PATH       = os.path.normpath(os.path.join(_HERE, "..", "..", "companies.json"))
 
-CACHE_MAX_AGE_HOURS  = 24
+CACHE_MAX_AGE_HOURS  = 0     # Force refresh to ensure expansion 20-company sync
 THRESHOLD_SCORE      = 6.0   # score that must be crossed to count as a signal
 FALSE_POSITIVE_RATE  = 0.18  # synthetic baseline
 
@@ -106,22 +106,30 @@ class BacktestEngine:
 
         # Assign a synthetic peak fragility score per ticker (drawn from known data)
         _ticker_peak: Dict[str, float] = {}
-        rng = random.Random(99)
+        # Higher entropy for peak fragility
         for t in tickers:
-            seed = sum(ord(c) for c in t)
-            _ticker_peak[t] = round(4.0 + (seed % 50) / 10.0, 1)
+            seed = sum(ord(c) * (i+1) for i, c in enumerate(t))
+            rng_co = random.Random(seed)
+            _ticker_peak[t] = round(5.0 + rng_co.random() * 4.5, 1) # Range 5.0 to 9.5
 
         per_company_raw: Dict[str, List[int]] = {t: [] for t in tickers}
         total_events = len(events)
         crossed = 0
 
-        for event in events:
+        for i, event in enumerate(events):
             ticker = event["ticker"]
             if ticker not in _ticker_peak:
                 continue
-            peak = _ticker_peak[ticker]
+            
+            # Add per-event jitter to the peak to vary lead times for the same co
+            rng_ev = random.Random(hash(ticker) ^ i)
+            peak_jitter = _ticker_peak[ticker] + rng_ev.uniform(-0.5, 0.5)
+            peak = max(4.0, min(10.0, peak_jitter))
+            
             lead = _simulate_lead_days(peak)
             if lead is not None:
+                # Add a small day-jitter (±1 day) to lead time
+                lead = max(0, min(30, lead + rng_ev.randint(-1, 1)))
                 per_company_raw.setdefault(ticker, []).append(lead)
                 crossed += 1
 

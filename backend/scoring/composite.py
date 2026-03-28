@@ -12,11 +12,10 @@ from typing import Dict, Any, List, Optional
 
 # ─── Constants ────────────────────────────────────────────────────────────────
 WEIGHTS: Dict[str, float] = {
-    "fda_recall_velocity": 0.25,
-    "reddit_oos_velocity":  0.20,
-    "wikipedia_edit_wars":  0.20,
-    "fred_macro_backdrop":  0.15,
-    "adzuna_job_velocity":  0.12,
+    "fda_recall_velocity": 0.35,
+    "wikipedia_edit_wars": 0.25,
+    "fred_macro_backdrop": 0.20,
+    "adzuna_job_velocity": 0.12,
     "edgar_8k_keywords":    0.08,
 }
 
@@ -41,7 +40,7 @@ _cache: Dict[str, Any] = {
     "loaded_at":  0.0,
     "co_loaded":  0.0,
 }
-CACHE_TTL = 60  # seconds
+CACHE_TTL = 5  # seconds (reduced from 60 for presentation responsiveness)
 
 
 def _normalise_raw(value: float) -> float:

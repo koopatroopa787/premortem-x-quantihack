@@ -14,10 +14,10 @@ HISTORICAL_EVENTS_PATH = os.path.join(_HERE, "..", "store", "historical_events.j
 
 # Seed per-ticker lead times (deterministic but realistic)
 _SYNTHETIC_LEAD_TIMES: Dict[str, int] = {
-    "HSY":  25, "UL":   22, "MDLZ": 21, "K":    19, "GIS":  18,
-    "PG":   16, "CPB":  15, "SJM":  14, "PEP":  13, "CAG":  12,
-    "HRL":  12, "MKC":  11, "TSN":  11, "KO":   10, "CLX":  10,
-    "CL":    9, "CHD":   9, "KHC":   8, "LANC":  7, "THS":   7,
+    "UL":    25, "PG":    23, "KO":    12, "PEP":   14, "GIS":   18,
+    "K":     21, "CPB":   17, "SJM":   15, "CAG":   13, "HRL":   12,
+    "HSY":   24, "MKC":   11, "CLX":   16, "CHD":   15, "ENR":   10,
+    "COTY":  9,  "EL":    11, "CL":    14, "RBGLY": 19, "NWL":   13,
 }
 
 # Ten synthetic sector stress events
