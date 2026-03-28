@@ -1,1 +1,57 @@
-{}
+{
+  "UL": {
+    "last_updated": "2026-03-28T13:00:00Z",
+    "signals": {
+      "fda_recall_velocity": 0.80,
+      "reddit_oos_velocity": 0.90,
+      "wikipedia_edit_wars": 0.60,
+      "fred_macro_backdrop": 0.70,
+      "adzuna_job_velocity": 0.55,
+      "edgar_8k_keywords": 0.40
+    }
+  },
+  "PG": {
+    "last_updated": "2026-03-28T13:00:00Z",
+    "signals": {
+      "fda_recall_velocity": 0.25,
+      "reddit_oos_velocity": 0.30,
+      "wikipedia_edit_wars": 0.20,
+      "fred_macro_backdrop": 0.50,
+      "adzuna_job_velocity": 0.15,
+      "edgar_8k_keywords": 0.10
+    }
+  },
+  "KO": {
+    "last_updated": "2026-03-28T13:00:00Z",
+    "signals": {
+      "fda_recall_velocity": 0.10,
+      "reddit_oos_velocity": 0.12,
+      "wikipedia_edit_wars": 0.08,
+      "fred_macro_backdrop": 0.40,
+      "adzuna_job_velocity": 0.05,
+      "edgar_8k_keywords": 0.02
+    }
+  },
+  "PEP": {
+    "last_updated": "2026-03-28T13:00:00Z",
+    "signals": {
+      "fda_recall_velocity": 0.18,
+      "reddit_oos_velocity": 0.20,
+      "wikipedia_edit_wars": 0.12,
+      "fred_macro_backdrop": 0.45,
+      "adzuna_job_velocity": 0.10,
+      "edgar_8k_keywords": 0.05
+    }
+  },
+  "HSY": {
+    "last_updated": "2026-03-28T13:00:00Z",
+    "signals": {
+      "fda_recall_velocity": 0.65,
+      "reddit_oos_velocity": 0.72,
+      "wikipedia_edit_wars": 0.50,
+      "fred_macro_backdrop": 0.60,
+      "adzuna_job_velocity": 0.45,
+      "edgar_8k_keywords": 0.30
+    }
+  }
+}

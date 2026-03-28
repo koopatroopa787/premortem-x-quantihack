@@ -1,0 +1,60 @@
+/**
+ * styles/overrides.css
+ * Data-state CSS ONLY — no colours, no layout, no fonts.
+ * Handles: loading states, stale data, status animations, ticker scroll.
+ * The Pre-Mortem Machine
+ */
+
+/* ── Status pill placeholder classes (colours set inline by component) ── */
+.status-stable   {}
+.status-elevated {}
+.status-critical {}
+
+/* ── Canary / signal state ── */
+.signal-degraded { opacity: 0.5; }
+.report-stale    { opacity: 0.85; }
+.canary-top      {}   /* ambient glow — set by Stitch or inline */
+.panel-critical  {}
+.panel-warning   {}
+
+/* ── Pulse: border opacity for CRITICAL rows ── */
+.pulse {
+  animation: pulse-border 2s ease-in-out infinite;
+}
+@keyframes pulse-border {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+/* ── Canary flash: short amber highlight when a canary fires ── */
+.canary-flash {
+  animation: flash-row 0.8s ease-out;
+}
+@keyframes flash-row {
+  0%   { background-color: rgba(255, 183, 0, 0.3); }
+  100% { background-color: transparent; }
+}
+
+/* ── Panel pulse: red glow on the "next victim" panel ── */
+.panel-pulse {
+  animation: pulse-panel 3s ease-in-out infinite;
+}
+@keyframes pulse-panel {
+  0%, 100% { box-shadow: none; }
+  50%       { box-shadow: 0 0 20px rgba(255, 68, 85, 0.4); }
+}
+
+/* ── Live ticker scroll ── */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-scrolling {
+  animation: ticker-scroll 30s linear infinite;
+  /* Double inner content in JSX for seamless loop */
+}
+
+/* ── Selected company row ── */
+.row-selected {
+  outline: 1px solid var(--outline-variant);
+}

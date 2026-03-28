@@ -1,0 +1,35 @@
+{
+  "avg_lead_days": 5.5,
+  "accuracy_rate": 0.4,
+  "false_positive_rate": 0.18,
+  "events_analysed": 50,
+  "methodology": "Composite signal backtested against historical FDA recall events. Signal lead time computed as days before event date that score crossed 6.0 threshold.",
+  "per_company": {
+    "UL": {
+      "events": 10,
+      "avg_lead": 0.0,
+      "accuracy": 0.0
+    },
+    "PG": {
+      "events": 10,
+      "avg_lead": 0.0,
+      "accuracy": 0.0
+    },
+    "KO": {
+      "events": 10,
+      "avg_lead": 0.0,
+      "accuracy": 0.0
+    },
+    "PEP": {
+      "events": 10,
+      "avg_lead": 3.0,
+      "accuracy": 1.0
+    },
+    "HSY": {
+      "events": 10,
+      "avg_lead": 8.0,
+      "accuracy": 1.0
+    }
+  },
+  "computed_at": "2026-03-28T13:32:26.819343+00:00"
+}
