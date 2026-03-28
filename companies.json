@@ -11,7 +11,7 @@
     },
     {
       "ticker": "PG",
-      "name": "Procter & Gamble",
+      "name": "P&G",
       "reddit_keywords": ["P&G", "Tide", "Pampers"],
       "fda_search": "procter",
       "adzuna_search": "Procter & Gamble logistics",
@@ -37,12 +37,147 @@
       "sector": "CPG"
     },
     {
+      "ticker": "GIS",
+      "name": "General Mills",
+      "reddit_keywords": ["General Mills", "Cheerios", "Häagen-Dazs"],
+      "fda_search": "general mills",
+      "adzuna_search": "General Mills logistics",
+      "wiki_page": "General_Mills",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "K",
+      "name": "Kellanova",
+      "reddit_keywords": ["Kellanova", "Pringles", "Cheez-It"],
+      "fda_search": "kellanova",
+      "adzuna_search": "Kellanova supply chain",
+      "wiki_page": "Kellanova",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "CPB",
+      "name": "Campbell's",
+      "reddit_keywords": ["Campbell's", "Goldfish", "V8"],
+      "fda_search": "campbell",
+      "adzuna_search": "Campbell Soup supply",
+      "wiki_page": "Campbell_Soup_Company",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "SJM",
+      "name": "J.M. Smucker",
+      "reddit_keywords": ["Smucker's", "Jif", "Folgers"],
+      "fda_search": "smucker",
+      "adzuna_search": "J.M. Smucker logistics",
+      "wiki_page": "The_J.M._Smucker_Company",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "CAG",
+      "name": "Conagra",
+      "reddit_keywords": ["Conagra", "Slim Jim", "Healthy Choice"],
+      "fda_search": "conagra",
+      "adzuna_search": "Conagra Brands supply",
+      "wiki_page": "Conagra_Brands",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "HRL",
+      "name": "Hormel",
+      "reddit_keywords": ["Hormel", "SPAM", "Skippy"],
+      "fda_search": "hormel",
+      "adzuna_search": "Hormel Foods logistics",
+      "wiki_page": "Hormel_Foods",
+      "sector": "CPG"
+    },
+    {
       "ticker": "HSY",
       "name": "Hershey",
-      "reddit_keywords": ["Hershey", "Reese's"],
+      "reddit_keywords": ["Hershey", "Reese's", "Kit Kat"],
       "fda_search": "hershey",
-      "adzuna_search": "Hershey logistics",
+      "adzuna_search": "Hershey supply chain",
       "wiki_page": "The_Hershey_Company",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "MKC",
+      "name": "McCormick",
+      "reddit_keywords": ["McCormick", "Old Bay", "French's"],
+      "fda_search": "mccormick",
+      "adzuna_search": "McCormick spice supply",
+      "wiki_page": "McCormick_%26_Company",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "CLX",
+      "name": "Clorox",
+      "reddit_keywords": ["Clorox", "Pine-Sol", "Brita"],
+      "fda_search": "clorox",
+      "adzuna_search": "Clorox supply chain",
+      "wiki_page": "The_Clorox_Company",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "CHD",
+      "name": "Church & Dwight",
+      "reddit_keywords": ["Arm & Hammer", "OxiClean"],
+      "fda_search": "church dwight",
+      "adzuna_search": "Church & Dwight logistics",
+      "wiki_page": "Church_%26_Dwight",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "ENR",
+      "name": "Energizer",
+      "reddit_keywords": ["Energizer", "Duracell replacement"],
+      "fda_search": "energizer",
+      "adzuna_search": "Energizer battery supply",
+      "wiki_page": "Energizer_Holdings",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "COTY",
+      "name": "Coty",
+      "reddit_keywords": ["Coty", "CoverGirl", "Rimmel"],
+      "fda_search": "coty",
+      "adzuna_search": "Coty logistics",
+      "wiki_page": "Coty_Inc.",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "EL",
+      "name": "Estée Lauder",
+      "reddit_keywords": ["Estée Lauder", "Clinique", "M·A·C"],
+      "fda_search": "estee lauder",
+      "adzuna_search": "Estée Lauder supply chain",
+      "wiki_page": "The_Est%C3%A9e_Lauder_Companies",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "CL",
+      "name": "Colgate",
+      "reddit_keywords": ["Colgate", "Palmolive"],
+      "fda_search": "colgate",
+      "adzuna_search": "Colgate-Palmolive supply",
+      "wiki_page": "Colgate-Palmolive",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "RBGLY",
+      "name": "Reckitt",
+      "reddit_keywords": ["Reckitt", "Lysol", "Dettol"],
+      "fda_search": "reckitt",
+      "adzuna_search": "Reckitt Benckiser supply",
+      "wiki_page": "Reckitt",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "NWL",
+      "name": "Newell Brands",
+      "reddit_keywords": ["Newell", "Rubbermaid", "Sharpie"],
+      "fda_search": "newell brands",
+      "adzuna_search": "Newell Brands logistics",
+      "wiki_page": "Newell_Brands",
       "sector": "CPG"
     }
   ]

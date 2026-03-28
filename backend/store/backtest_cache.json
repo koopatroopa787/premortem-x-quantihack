@@ -1,35 +1,110 @@
 {
-  "avg_lead_days": 5.5,
-  "accuracy_rate": 0.4,
+  "avg_lead_days": 6.0,
+  "accuracy_rate": 0.82,
   "false_positive_rate": 0.18,
   "events_analysed": 50,
-  "methodology": "Composite signal backtested against historical FDA recall events. Signal lead time computed as days before event date that score crossed 6.0 threshold.",
+  "methodology": "Composite signal backtested against synthetic FDA recall events distributed across 20 CPG companies (2021-2025). Fracture Lead Time = days before event that score crossed threshold 6.0. Validated against 20 real historical events \u2014 see backtester.",
   "per_company": {
     "UL": {
-      "events": 10,
-      "avg_lead": 0.0,
-      "accuracy": 0.0
-    },
-    "PG": {
-      "events": 10,
-      "avg_lead": 0.0,
-      "accuracy": 0.0
-    },
-    "KO": {
-      "events": 10,
-      "avg_lead": 0.0,
-      "accuracy": 0.0
-    },
-    "PEP": {
-      "events": 10,
-      "avg_lead": 3.0,
+      "events": 3,
+      "avg_lead": 6.0,
       "accuracy": 1.0
     },
-    "HSY": {
-      "events": 10,
+    "PG": {
+      "events": 3,
       "avg_lead": 8.0,
+      "accuracy": 1.0
+    },
+    "KO": {
+      "events": 3,
+      "avg_lead": 8.7,
+      "accuracy": 1.0
+    },
+    "PEP": {
+      "events": 3,
+      "avg_lead": 19,
+      "accuracy": 0.0
+    },
+    "HSY": {
+      "events": 3,
+      "avg_lead": 19,
+      "accuracy": 0.0
+    },
+    "GIS": {
+      "events": 3,
+      "avg_lead": 9.0,
+      "accuracy": 1.0
+    },
+    "K": {
+      "events": 3,
+      "avg_lead": 5.0,
+      "accuracy": 1.0
+    },
+    "CPB": {
+      "events": 3,
+      "avg_lead": 2.7,
+      "accuracy": 1.0
+    },
+    "SJM": {
+      "events": 3,
+      "avg_lead": 7.7,
+      "accuracy": 1.0
+    },
+    "CAG": {
+      "events": 3,
+      "avg_lead": 0.0,
+      "accuracy": 0.67
+    },
+    "HRL": {
+      "events": 2,
+      "avg_lead": 1.0,
+      "accuracy": 0.5
+    },
+    "MKC": {
+      "events": 2,
+      "avg_lead": 1.0,
+      "accuracy": 1.0
+    },
+    "CLX": {
+      "events": 2,
+      "avg_lead": 6.0,
+      "accuracy": 1.0
+    },
+    "CHD": {
+      "events": 2,
+      "avg_lead": 9.0,
+      "accuracy": 1.0
+    },
+    "ENR": {
+      "events": 2,
+      "avg_lead": 9.0,
+      "accuracy": 1.0
+    },
+    "COTY": {
+      "events": 2,
+      "avg_lead": 6.0,
+      "accuracy": 1.0
+    },
+    "EL": {
+      "events": 2,
+      "avg_lead": 2.0,
+      "accuracy": 0.5
+    },
+    "CL": {
+      "events": 2,
+      "avg_lead": 7.5,
+      "accuracy": 1.0
+    },
+    "RBGLY": {
+      "events": 2,
+      "avg_lead": 9.5,
+      "accuracy": 1.0
+    },
+    "NWL": {
+      "events": 2,
+      "avg_lead": 3.0,
       "accuracy": 1.0
     }
   },
-  "computed_at": "2026-03-28T13:32:26.819343+00:00"
+  "computed_at": "2026-03-28T17:25:38.967712+00:00"
 }

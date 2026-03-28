@@ -7,71 +7,65 @@ import {
 
 // ── Palette (Harmonized with Sage Forensic) ──────────────────────────
 const C = {
-  bg: "#faf9f5", 
-  card: "#ffffff", 
+  bg: "#faf9f5",
+  card: "#ffffff",
   cardHigh: "#f2f0e4",
-  border: "#e0ddd0", 
+  border: "#e0ddd0",
   borderBright: "#4f605340",
-  green: "#4f6053", 
+  green: "#4f6053",
   greenFaint: "#4f605310",
-  amber: "#c18d60", 
+  amber: "#c18d60",
   amberFaint: "#c18d6012",
-  red: "#705559", 
+  red: "#705559",
   redFaint: "#70555910",
-  blue: "#5d7a8c", 
+  blue: "#5d7a8c",
   blueFaint: "#5d7a8c10",
-  purple: "#7c6a8c", 
+  purple: "#7c6a8c",
   purpleFaint: "#7c6a8c10",
-  teal: "#5a7a7a", 
+  teal: "#5a7a7a",
   tealFaint: "#5a7a7a10",
   cyan: "#4f6053",
-  text: "#1a1c1a", 
-  textSec: "#5a6a5a", 
+  text: "#1a1c1a",
+  textSec: "#5a6a5a",
   textMut: "#a0a4a0",
   mono: "'JetBrains Mono','Fira Code',monospace",
   sans: "var(--font-body), 'Manrope', sans-serif",
 };
 
 // ── Companies ─────────────────────────────────────────────────────
-const COMPANIES = [
-  { ticker:"UL",  name:"Unilever",       sector:"Personal Care", baseVol: 0.018 },
-  { ticker:"HSY", name:"Hershey",        sector:"Confectionery", baseVol: 0.022 },
-  { ticker:"GIS", name:"General Mills",  sector:"Food",          baseVol: 0.015 },
-  { ticker:"CPB", name:"Campbell's",     sector:"Food",          baseVol: 0.020 },
-  { ticker:"CLX", name:"Clorox",         sector:"Household",     baseVol: 0.024 },
-  { ticker:"CAG", name:"Conagra",        sector:"Food",          baseVol: 0.021 },
-  { ticker:"HRL", name:"Hormel",         sector:"Meat",          baseVol: 0.017 },
-  { ticker:"SJM", name:"J.M. Smucker",   sector:"Food",          baseVol: 0.019 },
+// ── Companies (Initial fallback, replaced by fetch) ──────────────────
+const DEFAULT_COMPANIES = [
+  { ticker: "UL", name: "Unilever", sector: "Personal Care", baseVol: 0.018 },
+  { ticker: "HSY", name: "Hershey", sector: "Confectionery", baseVol: 0.022 },
+  { ticker: "PG", name: "P&G", sector: "CPG", baseVol: 0.015 },
 ];
 
 const SIGNAL_WEIGHTS_DEFAULT = {
-  fda_recall_velocity: 0.25,
-  reddit_oos_velocity: 0.20,
-  wikipedia_edit_wars: 0.20,
-  fred_macro_backdrop: 0.15,
+  fda_recall_velocity: 0.35,
+  wikipedia_edit_wars: 0.25,
+  fred_macro_backdrop: 0.20,
   adzuna_job_velocity: 0.12,
-  edgar_8k_keywords:   0.08,
+  edgar_8k_keywords: 0.08,
 };
 
 const SIGNAL_META = {
-  fda_recall_velocity: { label:"FDA Recall",      color: C.red    },
-  reddit_oos_velocity: { label:"Reddit OOS",      color: C.amber  },
-  wikipedia_edit_wars: { label:"Wiki Edit Wars",  color: C.purple },
-  fred_macro_backdrop: { label:"FRED Macro",      color: C.blue   },
-  adzuna_job_velocity: { label:"Adzuna Jobs",     color: C.teal   },
-  edgar_8k_keywords:   { label:"SEC 8-K",         color: C.green  },
+  fda_recall_velocity: { label: "FDA Recall", color: C.red },
+  wikipedia_edit_wars: { label: "Wiki Edit Wars", color: C.purple },
+  fred_macro_backdrop: { label: "FRED Macro", color: C.blue },
+  adzuna_job_velocity: { label: "Adzuna Jobs", color: C.teal },
+  edgar_8k_keywords: { label: "SEC 8-K", color: C.green },
 };
 
 const GROUND_TRUTH_SOURCES = {
-  synthetic:  { label:"Synthetic Events",      color: C.purple, desc:"AI-generated supply chain stress events with realistic timing" },
-  fda:        { label:"FDA Recall Dates",       color: C.red,    desc:"Historical FDA food enforcement recall classifications as event ground truth" },
-  stock_drop: { label:"Stock Price Drops",      color: C.amber,  desc:"≥5% drawdown events from synthetic price series as signal targets" },
+  synthetic: { label: "Synthetic Events", color: C.purple, desc: "AI-generated supply chain stress events with realistic timing" },
+  fda: { label: "FDA Recall Dates", color: C.red, desc: "Historical FDA food enforcement recall classifications as event ground truth" },
+  stock_drop: { label: "Stock Price Drops", color: C.amber, desc: "≥5% drawdown events from synthetic price series as signal targets" },
 };
 
 const STRATEGY_MODES = {
-  signal_only: { label:"Signal Monitor",    desc:"Alert only — no position taken. Measure detection accuracy." },
-  short_entry: { label:"Short on Alert",    desc:"Enter short position when score crosses threshold. Exit after N days or event." },
-  long_exit:   { label:"Reduce Long",       desc:"Exit existing long position when score crosses threshold." },
+  signal_only: { label: "Signal Monitor", desc: "Alert only — no position taken. Measure detection accuracy." },
+  short_entry: { label: "Short on Alert", desc: "Enter short position when score crosses threshold. Exit after N days or event." },
+  long_exit: { label: "Reduce Long", desc: "Exit existing long position when score crosses threshold." },
 };
 
 // ── Deterministic RNG ─────────────────────────────────────────────
@@ -97,7 +91,7 @@ function generateEvents(ticker, source, rand) {
     const n = 3 + Math.floor(rand() * 3);
     for (let i = 0; i < n; i++) events.push(20 + Math.floor(rand() * 210));
   }
-  return [...new Set(events)].sort((a,b) => a - b);
+  return [...new Set(events)].sort((a, b) => a - b);
 }
 
 function generatePriceSeries(ticker, events, rand, baseVol) {
@@ -115,8 +109,8 @@ function generatePriceSeries(ticker, events, rand, baseVol) {
 function generateSignalHistory(ticker, events, weights, rand, baselineSignals) {
   const days = 252;
   const baselines = { ...(baselineSignals || {}) };
-  Object.keys(weights).forEach(k => { 
-    if (baselines[k] === undefined) baselines[k] = 0.08 + rand() * 0.18; 
+  Object.keys(weights).forEach(k => {
+    if (baselines[k] === undefined) baselines[k] = 0.08 + rand() * 0.18;
   });
 
   return Array.from({ length: days }, (_, d) => {
@@ -176,9 +170,7 @@ function runStrategy(history, prices, events, threshold, strategyMode, holdDays)
 
       if (holdExpired || eventHit || scoreNormal) {
         const exitPrice = nextPrice;
-        const pnl = strategyMode === "short_entry"
-          ? (entryPrice - exitPrice) / entryPrice
-          : (exitPrice - entryPrice) / entryPrice;
+        const pnl = (entryPrice - exitPrice) / entryPrice;
         trades.push({
           entryDay, exitDay: d + 1, entryPrice,
           exitPrice, pnl: +pnl.toFixed(4),
@@ -202,12 +194,14 @@ function runStrategy(history, prices, events, threshold, strategyMode, holdDays)
 }
 
 // ── Full backtest engine ──────────────────────────────────────────
-function runBacktest(weights, threshold, source, strategyMode, holdDays, realSignals = {}) {
+function runBacktest(weights, threshold, source, strategyMode, holdDays, realSignals = {}, companies = []) {
   const results = [];
   let totalEvents = 0, detected = 0, leadSum = 0, fpCount = 0;
   let totalPnl = 0, tradesAll = [];
 
-  COMPANIES.forEach((co, idx) => {
+  const targetCompanies = companies.length > 0 ? companies : DEFAULT_COMPANIES;
+
+  targetCompanies.forEach((co, idx) => {
     const rand = seededRand(co.ticker.charCodeAt(0) * 97 + idx * 43 + 7);
     const events = generateEvents(co.ticker, source, rand);
     const prices = generatePriceSeries(co.ticker, events, rand, co.baseVol);
@@ -220,15 +214,30 @@ function runBacktest(weights, threshold, source, strategyMode, holdDays, realSig
     tradesAll = [...tradesAll, ...trades.map(t => ({ ...t, ticker: co.ticker }))];
     totalPnl += coPnl;
 
-    let leadDay = null;
+    let primaryLeadDay = null;
     const primaryEvent = events[0];
-    for (let d = 0; d < primaryEvent; d++) {
-      if (history[d].score >= threshold) {
-        leadDay = primaryEvent - d;
-        break;
+
+    let coDetectedEvents = 0;
+    let coLeadSum = 0;
+    
+    events.forEach(ev => {
+      let evLeadDay = null;
+      for (let d = Math.max(0, ev - 60); d < ev; d++) {
+        if (history[d].score >= threshold) {
+          evLeadDay = ev - d;
+          break;
+        }
       }
-    }
-    if (leadDay !== null) { detected++; leadSum += leadDay; }
+      if (evLeadDay !== null) {
+        coDetectedEvents++;
+        coLeadSum += evLeadDay;
+        if (ev === primaryEvent) primaryLeadDay = evLeadDay;
+      }
+    });
+
+    totalEvents += events.length;
+    detected += coDetectedEvents;
+    leadSum += coLeadSum;
 
     // False positives
     let fp = 0;
@@ -242,7 +251,7 @@ function runBacktest(weights, threshold, source, strategyMode, holdDays, realSig
 
     results.push({
       ...co, history, events, prices, primaryEvent,
-      leadDay, detected: leadDay !== null,
+      leadDay: primaryLeadDay, detected: primaryLeadDay !== null,
       trades, pnl: coPnl, sharpe,
       maxScore: +Math.max(...history.map(h => h.score)).toFixed(2),
       avgScore: +(history.reduce((s, h) => s + h.score, 0) / history.length).toFixed(2),
@@ -251,7 +260,7 @@ function runBacktest(weights, threshold, source, strategyMode, holdDays, realSig
 
   const accuracy = totalEvents > 0 ? detected / totalEvents : 0;
   const avgLead = detected > 0 ? Math.round(leadSum / detected) : 0;
-  const fpRate = fpCount / COMPANIES.length;
+  const fpRate = fpCount / (targetCompanies.length || 1);
   const allSharpes = results.filter(r => r.sharpe !== null).map(r => r.sharpe);
   const avgSharpe = allSharpes.length
     ? +(allSharpes.reduce((s, v) => s + v, 0) / allSharpes.length).toFixed(2) : null;
@@ -318,8 +327,8 @@ export default function BacktesterV2() {
   const [results, setResults] = useState(null);
   const [tab, setTab] = useState("accuracy");
   const [selectedTicker, setSelectedTicker] = useState("UL");
-
   const [realSignals, setRealSignals] = useState({});
+  const [backtestCompanies, setBacktestCompanies] = useState(DEFAULT_COMPANIES);
 
   useEffect(() => {
     // Fetch real current signal values from backend
@@ -327,16 +336,25 @@ export default function BacktesterV2() {
       .then(r => r.json())
       .then(data => {
         if (data?.companies) {
-          const mapped = {};
+          // Map all 20 companies to the backtest format
+          const mappedCos = data.companies.map(c => ({
+            ticker: c.ticker,
+            name: c.name,
+            sector: c.sector || "CPG",
+            baseVol: 0.015 + (Math.random() * 0.01) // realistic volatility variance
+          }));
+          setBacktestCompanies(mappedCos);
+
+          const mappedSigs = {};
           data.companies.forEach(co => {
-            mapped[co.ticker] = Object.fromEntries(
+            mappedSigs[co.ticker] = Object.fromEntries(
               Object.entries(co.signals || {}).map(([k, v]) => [k, v.raw])
             );
           });
-          setRealSignals(mapped);
+          setRealSignals(mappedSigs);
         }
       })
-      .catch(() => {}); // fail silently — synthetic data is the fallback
+      .catch(() => { }); // fail silently — synthetic data is the fallback
   }, []);
 
   const totalW = useMemo(
@@ -347,20 +365,20 @@ export default function BacktesterV2() {
   const handleRun = useCallback(() => {
     setRunning(true);
     setTimeout(() => {
-      const r = runBacktest(weights, threshold, source, strategyMode, holdDays, realSignals);
+      const r = runBacktest(weights, threshold, source, strategyMode, holdDays, realSignals, backtestCompanies);
       setResults(r);
       setRunning(false);
       setRan(true);
     }, 1100);
-  }, [weights, threshold, source, strategyMode, holdDays, realSignals]);
+  }, [weights, threshold, source, strategyMode, holdDays, realSignals, backtestCompanies]);
 
   const sel = results?.results?.find(r => r.ticker === selectedTicker);
 
   const tabs = [
-    { id: "accuracy",   label: "Accuracy" },
-    { id: "timeline",   label: "Signal Timeline" },
-    { id: "breakdown",  label: "Per Company" },
-    { id: "strategy",   label: "Strategy P&L" },
+    { id: "accuracy", label: "Accuracy" },
+    { id: "timeline", label: "Signal Timeline" },
+    { id: "breakdown", label: "Per Company" },
+    { id: "strategy", label: "Strategy P&L" },
   ];
 
   return (
@@ -386,7 +404,7 @@ export default function BacktesterV2() {
             ))}
           </div>
           <span style={{ fontFamily: C.mono, fontSize: 12, color: C.green, letterSpacing: "0.1em" }}>
-            POST MORTEM BACKTESTER
+            PRE MORTEM BACKTESTER
           </span>
           <Pill color={C.amber}>COMPOSITE + STRATEGY</Pill>
           {ran && results && (
@@ -568,7 +586,7 @@ export default function BacktesterV2() {
               </div>
               <style>{`@keyframes grow{from{width:0}to{width:100%}}`}</style>
               <div style={{ fontSize: 11, color: C.textSec }}>
-                {COMPANIES.length} companies × 252 days × {Object.keys(weights).length} signals
+                {backtestCompanies.length} companies × 252 days × {Object.keys(weights).length} signals
               </div>
             </div>
           )}
@@ -851,7 +869,7 @@ export default function BacktesterV2() {
                       borderBottom: `1px solid ${C.border}`,
                       background: C.bg,
                     }}>
-                      {["Ticker","Company","Peak Score","Avg Score","Lead Days","Events","Status"].map(h => (
+                      {["Ticker", "Company", "Peak Score", "Avg Score", "Lead Days", "Events", "Status"].map(h => (
                         <div key={h} style={{ fontFamily: C.mono, fontSize: 9, color: C.textSec, letterSpacing: "0.1em", textTransform: "uppercase" }}>
                           {h}
                         </div>
@@ -917,7 +935,7 @@ export default function BacktesterV2() {
                             key={r.ticker}
                             data={r.history.map(h => ({ day: h.day, [r.ticker]: h.score }))}
                             type="monotone" dataKey={r.ticker}
-                            stroke={[C.green,C.red,C.blue,C.amber,C.purple,C.teal,C.cyan,C.green][i]}
+                            stroke={[C.green, C.red, C.blue, C.amber, C.purple, C.teal, C.cyan, C.green][i % 8]}
                             strokeWidth={1.5} dot={false} strokeOpacity={0.7}
                           />
                         ))}
@@ -1012,7 +1030,7 @@ export default function BacktesterV2() {
                             gap: 10, padding: "8px 16px",
                             borderBottom: `1px solid ${C.border}`, background: C.bg,
                           }}>
-                            {["Ticker","Entry","Exit","Hold","Score","PnL","Exit Reason"].map(h => (
+                            {["Ticker", "Entry", "Exit", "Hold", "Score", "PnL", "Exit Reason"].map(h => (
                               <div key={h} style={{ fontFamily: C.mono, fontSize: 8, color: C.textMut, textTransform: "uppercase", letterSpacing: "0.08em" }}>{h}</div>
                             ))}
                           </div>

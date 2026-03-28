@@ -1,9 +1,9 @@
 [
   {
     "event_id": "FDA-SYN-0032",
-    "ticker": "PG",
+    "ticker": "MKC",
     "event_date": "2021-01-14",
-    "description": "Synthetic recall event for PG"
+    "description": "Synthetic recall event for MKC"
   },
   {
     "event_id": "FDA-SYN-0003",
@@ -19,27 +19,27 @@
   },
   {
     "event_id": "FDA-SYN-0015",
-    "ticker": "HSY",
+    "ticker": "ENR",
     "event_date": "2021-03-03",
-    "description": "Synthetic recall event for HSY"
+    "description": "Synthetic recall event for ENR"
   },
   {
     "event_id": "FDA-SYN-0014",
-    "ticker": "PEP",
+    "ticker": "CHD",
     "event_date": "2021-03-07",
-    "description": "Synthetic recall event for PEP"
+    "description": "Synthetic recall event for CHD"
   },
   {
     "event_id": "FDA-SYN-0049",
-    "ticker": "PEP",
+    "ticker": "SJM",
     "event_date": "2021-03-30",
-    "description": "Synthetic recall event for PEP"
+    "description": "Synthetic recall event for SJM"
   },
   {
     "event_id": "FDA-SYN-0011",
-    "ticker": "UL",
+    "ticker": "HRL",
     "event_date": "2021-06-28",
-    "description": "Synthetic recall event for UL"
+    "description": "Synthetic recall event for HRL"
   },
   {
     "event_id": "FDA-SYN-0042",
@@ -49,9 +49,9 @@
   },
   {
     "event_id": "FDA-SYN-0016",
-    "ticker": "UL",
+    "ticker": "COTY",
     "event_date": "2021-07-11",
-    "description": "Synthetic recall event for UL"
+    "description": "Synthetic recall event for COTY"
   },
   {
     "event_id": "FDA-SYN-0044",
@@ -61,9 +61,9 @@
   },
   {
     "event_id": "FDA-SYN-0008",
-    "ticker": "KO",
+    "ticker": "CPB",
     "event_date": "2021-07-29",
-    "description": "Synthetic recall event for KO"
+    "description": "Synthetic recall event for CPB"
   },
   {
     "event_id": "FDA-SYN-0041",
@@ -79,21 +79,21 @@
   },
   {
     "event_id": "FDA-SYN-0007",
-    "ticker": "PG",
+    "ticker": "K",
     "event_date": "2021-10-13",
-    "description": "Synthetic recall event for PG"
+    "description": "Synthetic recall event for K"
   },
   {
     "event_id": "FDA-SYN-0038",
-    "ticker": "KO",
+    "ticker": "CL",
     "event_date": "2021-11-15",
-    "description": "Synthetic recall event for KO"
+    "description": "Synthetic recall event for CL"
   },
   {
     "event_id": "FDA-SYN-0033",
-    "ticker": "KO",
+    "ticker": "CLX",
     "event_date": "2021-11-23",
-    "description": "Synthetic recall event for KO"
+    "description": "Synthetic recall event for CLX"
   },
   {
     "event_id": "FDA-SYN-0023",
@@ -103,33 +103,33 @@
   },
   {
     "event_id": "FDA-SYN-0039",
-    "ticker": "PEP",
+    "ticker": "RBGLY",
     "event_date": "2022-03-17",
-    "description": "Synthetic recall event for PEP"
+    "description": "Synthetic recall event for RBGLY"
   },
   {
     "event_id": "FDA-SYN-0017",
-    "ticker": "PG",
+    "ticker": "EL",
     "event_date": "2022-03-24",
-    "description": "Synthetic recall event for PG"
+    "description": "Synthetic recall event for EL"
   },
   {
     "event_id": "FDA-SYN-0028",
-    "ticker": "KO",
+    "ticker": "CPB",
     "event_date": "2022-03-28",
-    "description": "Synthetic recall event for KO"
+    "description": "Synthetic recall event for CPB"
   },
   {
     "event_id": "FDA-SYN-0006",
-    "ticker": "UL",
+    "ticker": "GIS",
     "event_date": "2022-04-03",
-    "description": "Synthetic recall event for UL"
+    "description": "Synthetic recall event for GIS"
   },
   {
     "event_id": "FDA-SYN-0018",
-    "ticker": "KO",
+    "ticker": "CL",
     "event_date": "2022-04-22",
-    "description": "Synthetic recall event for KO"
+    "description": "Synthetic recall event for CL"
   },
   {
     "event_id": "FDA-SYN-0005",
@@ -139,9 +139,9 @@
   },
   {
     "event_id": "FDA-SYN-0048",
-    "ticker": "KO",
+    "ticker": "CPB",
     "event_date": "2022-06-26",
-    "description": "Synthetic recall event for KO"
+    "description": "Synthetic recall event for CPB"
   },
   {
     "event_id": "FDA-SYN-0004",
@@ -151,33 +151,33 @@
   },
   {
     "event_id": "FDA-SYN-0031",
-    "ticker": "UL",
+    "ticker": "HRL",
     "event_date": "2022-07-24",
-    "description": "Synthetic recall event for UL"
+    "description": "Synthetic recall event for HRL"
   },
   {
     "event_id": "FDA-SYN-0037",
-    "ticker": "PG",
+    "ticker": "EL",
     "event_date": "2022-07-24",
-    "description": "Synthetic recall event for PG"
+    "description": "Synthetic recall event for EL"
   },
   {
     "event_id": "FDA-SYN-0040",
-    "ticker": "HSY",
+    "ticker": "NWL",
     "event_date": "2022-11-21",
-    "description": "Synthetic recall event for HSY"
+    "description": "Synthetic recall event for NWL"
   },
   {
     "event_id": "FDA-SYN-0036",
-    "ticker": "UL",
+    "ticker": "COTY",
     "event_date": "2022-11-28",
-    "description": "Synthetic recall event for UL"
+    "description": "Synthetic recall event for COTY"
   },
   {
     "event_id": "FDA-SYN-0046",
-    "ticker": "UL",
+    "ticker": "GIS",
     "event_date": "2022-12-06",
-    "description": "Synthetic recall event for UL"
+    "description": "Synthetic recall event for GIS"
   },
   {
     "event_id": "FDA-SYN-0045",
@@ -193,51 +193,51 @@
   },
   {
     "event_id": "FDA-SYN-0027",
-    "ticker": "PG",
+    "ticker": "K",
     "event_date": "2023-05-10",
-    "description": "Synthetic recall event for PG"
+    "description": "Synthetic recall event for K"
   },
   {
     "event_id": "FDA-SYN-0013",
-    "ticker": "KO",
+    "ticker": "CLX",
     "event_date": "2023-05-15",
-    "description": "Synthetic recall event for KO"
+    "description": "Synthetic recall event for CLX"
   },
   {
     "event_id": "FDA-SYN-0035",
-    "ticker": "HSY",
+    "ticker": "ENR",
     "event_date": "2023-05-16",
-    "description": "Synthetic recall event for HSY"
+    "description": "Synthetic recall event for ENR"
   },
   {
     "event_id": "FDA-SYN-0029",
-    "ticker": "PEP",
+    "ticker": "SJM",
     "event_date": "2023-07-09",
-    "description": "Synthetic recall event for PEP"
+    "description": "Synthetic recall event for SJM"
   },
   {
     "event_id": "FDA-SYN-0050",
-    "ticker": "HSY",
+    "ticker": "CAG",
     "event_date": "2023-07-30",
-    "description": "Synthetic recall event for HSY"
+    "description": "Synthetic recall event for CAG"
   },
   {
     "event_id": "FDA-SYN-0019",
-    "ticker": "PEP",
+    "ticker": "RBGLY",
     "event_date": "2023-11-01",
-    "description": "Synthetic recall event for PEP"
+    "description": "Synthetic recall event for RBGLY"
   },
   {
     "event_id": "FDA-SYN-0010",
-    "ticker": "HSY",
+    "ticker": "CAG",
     "event_date": "2024-01-22",
-    "description": "Synthetic recall event for HSY"
+    "description": "Synthetic recall event for CAG"
   },
   {
     "event_id": "FDA-SYN-0026",
-    "ticker": "UL",
+    "ticker": "GIS",
     "event_date": "2024-01-22",
-    "description": "Synthetic recall event for UL"
+    "description": "Synthetic recall event for GIS"
   },
   {
     "event_id": "FDA-SYN-0022",
@@ -247,27 +247,27 @@
   },
   {
     "event_id": "FDA-SYN-0030",
-    "ticker": "HSY",
+    "ticker": "CAG",
     "event_date": "2024-04-21",
-    "description": "Synthetic recall event for HSY"
+    "description": "Synthetic recall event for CAG"
   },
   {
     "event_id": "FDA-SYN-0012",
-    "ticker": "PG",
+    "ticker": "MKC",
     "event_date": "2024-04-24",
-    "description": "Synthetic recall event for PG"
+    "description": "Synthetic recall event for MKC"
   },
   {
     "event_id": "FDA-SYN-0020",
-    "ticker": "HSY",
+    "ticker": "NWL",
     "event_date": "2024-05-17",
-    "description": "Synthetic recall event for HSY"
+    "description": "Synthetic recall event for NWL"
   },
   {
     "event_id": "FDA-SYN-0047",
-    "ticker": "PG",
+    "ticker": "K",
     "event_date": "2024-05-21",
-    "description": "Synthetic recall event for PG"
+    "description": "Synthetic recall event for K"
   },
   {
     "event_id": "FDA-SYN-0001",
@@ -283,15 +283,15 @@
   },
   {
     "event_id": "FDA-SYN-0009",
-    "ticker": "PEP",
+    "ticker": "SJM",
     "event_date": "2024-10-17",
-    "description": "Synthetic recall event for PEP"
+    "description": "Synthetic recall event for SJM"
   },
   {
     "event_id": "FDA-SYN-0034",
-    "ticker": "PEP",
+    "ticker": "CHD",
     "event_date": "2024-11-30",
-    "description": "Synthetic recall event for PEP"
+    "description": "Synthetic recall event for CHD"
   },
   {
     "event_id": "FDA-SYN-0025",

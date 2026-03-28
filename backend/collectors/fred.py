@@ -1,16 +1,23 @@
+import sys
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.append(str(ROOT_DIR))
+
 import json
 import os
 from datetime import datetime, timezone
-from pathlib import Path
 from statistics import mean, pstdev
 
 from fredapi import Fred
 from dotenv import load_dotenv
 
-from backend.scoring.composite import compute_composite_score
 
-# Align with other collectors that source credentials from backend/.env.
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+
+from dotenv import load_dotenv
+
+# Restore standard imports
+load_dotenv(ROOT_DIR / "backend" / ".env")
 
 # Retail inventories-to-sales ratio and food PPI proxy.
 SERIES_CANDIDATES = {
@@ -141,11 +148,11 @@ def run_company_fred_pipeline() -> dict:
         ticker = company["ticker"]
         company_record = store.get(ticker, {})
         signals = company_record.get("signals", {})
-        signals["fred"] = float(macro.get("fred", 0.0))
+        signals["fred_macro_backdrop"] = float(macro.get("fred", 0.0))
 
         company_record["signals"] = signals
         company_record["fred_detail"] = macro
-        company_record["score"] = compute_composite_score(signals)
+        # Scoring is handled by the API
         company_record["updated_at"] = updated_at
         store[ticker] = company_record
 
@@ -154,4 +161,4 @@ def run_company_fred_pipeline() -> dict:
 
 
 if __name__ == "__main__":
-    print(fetch_macro_signals())
+    run_company_fred_pipeline()

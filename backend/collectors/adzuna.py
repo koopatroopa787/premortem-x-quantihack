@@ -1,11 +1,20 @@
+import sys
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.append(str(ROOT_DIR))
+
 import requests
 import os
 import json
 import math
-from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from time import sleep
 from dotenv import load_dotenv
+
+# Path fix
+COMPANIES_PATH = ROOT_DIR / "companies.json"
+DATA_STORE_PATH = ROOT_DIR / "backend" / "store" / "data_store.json"
 
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
@@ -117,6 +126,9 @@ def fetch_adzuna_job_velocity(company_name):
             f"{company_name} supply chain",
             f"{company_name} logistics",
             f"{company_name} procurement",
+            f"{company_name} warehouse",
+            f"{company_name} manufacturing",
+            f"{company_name} operations",
         ]
         targeted_count = max(
             _fetch_count(query, ADZUNA_APP_ID, ADZUNA_APP_KEY) for query in targeted_queries
@@ -128,7 +140,7 @@ def fetch_adzuna_job_velocity(company_name):
         adjusted_count = (
             float(targeted_count)
             if targeted_count > 0
-            else float(fallback_company_count) * 0.35
+            else float(fallback_company_count) * 0.5
         )
 
         baseline = _compute_baseline(company_name)
@@ -148,5 +160,34 @@ def fetch_adzuna_job_velocity(company_name):
         print(f"Error fetching Adzuna data: {e}")
         return 0
 
+def run_company_adzuna_pipeline():
+    if not COMPANIES_PATH.exists():
+        return {}
+    with open(COMPANIES_PATH, "r") as f:
+        companies = json.load(f).get("companies", [])
+    
+    if DATA_STORE_PATH.exists():
+        with open(DATA_STORE_PATH, "r") as f:
+            store = json.load(f)
+    else:
+        store = {}
+
+    updated_at = datetime.now(timezone.utc).isoformat()
+    for company in companies:
+        ticker = company["ticker"]
+        name = company.get("name", ticker)
+        signal = fetch_adzuna_job_velocity(name)
+        
+        company_record = store.get(ticker, {})
+        signals = company_record.get("signals", {})
+        signals["adzuna_job_velocity"] = signal
+        company_record["signals"] = signals
+        company_record["updated_at"] = updated_at
+        store[ticker] = company_record
+
+    with open(DATA_STORE_PATH, "w") as f:
+        json.dump(store, f, indent=2)
+    return store
+
 if __name__ == "__main__":
-    print(fetch_adzuna_job_velocity("Unilever"))
+    run_company_adzuna_pipeline()

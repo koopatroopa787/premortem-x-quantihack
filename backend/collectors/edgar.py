@@ -1,11 +1,22 @@
+import sys
+from pathlib import Path
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.append(str(ROOT_DIR))
+
 import math
 import os
 import re
+import json
 from datetime import datetime, timezone
 from time import sleep
 from typing import Dict, List
 
 import requests
+
+# Path fix
+COMPANIES_PATH = ROOT_DIR / "companies.json"
+DATA_STORE_PATH = ROOT_DIR / "backend" / "store" / "data_store.json"
 
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 SEC_SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik}.json"
@@ -249,5 +260,33 @@ def fetch_edgar_signal(ticker: str, max_filings: int = MAX_8K_LOOKBACK) -> float
     return fetch_edgar_8k_score(ticker=ticker, max_filings=max_filings)
 
 
+def run_company_edgar_pipeline():
+    if not COMPANIES_PATH.exists():
+        return {}
+    with open(COMPANIES_PATH, "r") as f:
+        companies = json.load(f).get("companies", [])
+    
+    if DATA_STORE_PATH.exists():
+        with open(DATA_STORE_PATH, "r") as f:
+            store = json.load(f)
+    else:
+        store = {}
+
+    updated_at = datetime.now(timezone.utc).isoformat()
+    for company in companies:
+        ticker = company["ticker"]
+        signal = fetch_edgar_8k_score(ticker)
+        
+        company_record = store.get(ticker, {})
+        signals = company_record.get("signals", {})
+        signals["edgar_8k_keywords"] = signal
+        company_record["signals"] = signals
+        company_record["updated_at"] = updated_at
+        store[ticker] = company_record
+
+    with open(DATA_STORE_PATH, "w") as f:
+        json.dump(store, f, indent=2)
+    return store
+
 if __name__ == "__main__":
-    print(fetch_edgar_8k_score("PG"))
+    run_company_edgar_pipeline()

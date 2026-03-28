@@ -14,7 +14,7 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.append(str(ROOT_DIR))
 
-from backend.scoring.composite import compute_composite_score
+# Import fix
 
 WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
 LOOKBACK_DAYS = 30
@@ -396,8 +396,7 @@ def aggregate_company_wiki_signal(
 
     return {
         "ticker": ticker,
-        "wiki": company_score,
-        "wiki_signal": company_score,
+        "wikipedia_edit_wars": company_score,
         "pages_considered": len(page_results),
         "top_k": min(TOP_K_STRESSED, len(page_results)),
         "anomaly_penalty": round(anomaly_penalty, 4),
@@ -433,10 +432,10 @@ def run_company_wiki_pipeline() -> Dict:
 
         company_record = store.get(ticker, {})
         signals = company_record.get("signals", {})
-        signals["wiki"] = format_wiki_signal(result.get("wiki_signal", 0.0))
+        signals["wikipedia_edit_wars"] = format_wiki_signal(result.get("wikipedia_edit_wars", 0.0))
         company_record["signals"] = signals
         company_record["wiki_detail"] = result
-        company_record["score"] = compute_composite_score(signals)
+        # Scoring is handled by the API
         company_record["updated_at"] = result["updated_at"]
         store[ticker] = company_record
 
@@ -445,6 +444,4 @@ def run_company_wiki_pipeline() -> Dict:
 
 
 if __name__ == "__main__":
-    pipeline_output = run_company_wiki_pipeline()
-    populated = [key for key in pipeline_output.keys() if not key.startswith("_")]
-    print(f"Updated wiki signals for {len(populated)} companies")
+    run_company_wiki_pipeline()

@@ -20,6 +20,22 @@
       {
         "timestamp": "2026-03-28T14:00:39.917133+00:00",
         "adjusted_count": 93.1
+      },
+      {
+        "timestamp": "2026-03-28T15:24:18.383938+00:00",
+        "adjusted_count": 93.1
+      },
+      {
+        "timestamp": "2026-03-28T15:46:58.056049+00:00",
+        "adjusted_count": 93.1
+      },
+      {
+        "timestamp": "2026-03-28T16:10:12.842201+00:00",
+        "adjusted_count": 5.0
+      },
+      {
+        "timestamp": "2026-03-28T17:11:42.516361+00:00",
+        "adjusted_count": 5.0
       }
     ],
     "Procter & Gamble": [
@@ -29,6 +45,10 @@
       },
       {
         "timestamp": "2026-03-28T14:00:45.678299+00:00",
+        "adjusted_count": 12.95
+      },
+      {
+        "timestamp": "2026-03-28T15:24:22.024556+00:00",
         "adjusted_count": 12.95
       }
     ],
@@ -40,6 +60,22 @@
       {
         "timestamp": "2026-03-28T14:00:51.519946+00:00",
         "adjusted_count": 218.39999999999998
+      },
+      {
+        "timestamp": "2026-03-28T15:24:25.295704+00:00",
+        "adjusted_count": 219.45
+      },
+      {
+        "timestamp": "2026-03-28T15:47:05.835249+00:00",
+        "adjusted_count": 219.45
+      },
+      {
+        "timestamp": "2026-03-28T16:10:24.566446+00:00",
+        "adjusted_count": 2.0
+      },
+      {
+        "timestamp": "2026-03-28T17:11:55.525734+00:00",
+        "adjusted_count": 2.0
       }
     ],
     "PepsiCo": [
@@ -50,12 +86,268 @@
       {
         "timestamp": "2026-03-28T14:00:57.504771+00:00",
         "adjusted_count": 2.0
+      },
+      {
+        "timestamp": "2026-03-28T15:24:28.561393+00:00",
+        "adjusted_count": 2.0
+      },
+      {
+        "timestamp": "2026-03-28T15:47:10.134066+00:00",
+        "adjusted_count": 2.0
+      },
+      {
+        "timestamp": "2026-03-28T16:10:30.506199+00:00",
+        "adjusted_count": 2.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:01.653819+00:00",
+        "adjusted_count": 2.0
       }
     ],
     "Hershey": [
       {
         "timestamp": "2026-03-28T14:01:03.892923+00:00",
         "adjusted_count": 7.35
+      },
+      {
+        "timestamp": "2026-03-28T15:24:31.869915+00:00",
+        "adjusted_count": 7.35
+      },
+      {
+        "timestamp": "2026-03-28T15:47:34.758724+00:00",
+        "adjusted_count": 7.35
+      },
+      {
+        "timestamp": "2026-03-28T16:11:11.568013+00:00",
+        "adjusted_count": 10.5
+      },
+      {
+        "timestamp": "2026-03-28T17:12:44.109165+00:00",
+        "adjusted_count": 10.5
+      }
+    ],
+    "P&G": [
+      {
+        "timestamp": "2026-03-28T15:47:01.697478+00:00",
+        "adjusted_count": 74.89999999999999
+      },
+      {
+        "timestamp": "2026-03-28T16:10:18.835009+00:00",
+        "adjusted_count": 5.0
+      },
+      {
+        "timestamp": "2026-03-28T17:11:48.817338+00:00",
+        "adjusted_count": 5.0
+      }
+    ],
+    "General Mills": [
+      {
+        "timestamp": "2026-03-28T15:47:14.261756+00:00",
+        "adjusted_count": 11.899999999999999
+      },
+      {
+        "timestamp": "2026-03-28T16:10:37.607121+00:00",
+        "adjusted_count": 8.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:07.846978+00:00",
+        "adjusted_count": 8.0
+      }
+    ],
+    "Kellanova": [
+      {
+        "timestamp": "2026-03-28T15:47:18.377776+00:00",
+        "adjusted_count": 5.6
+      },
+      {
+        "timestamp": "2026-03-28T16:10:43.340988+00:00",
+        "adjusted_count": 8.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:13.581083+00:00",
+        "adjusted_count": 8.0
+      }
+    ],
+    "Campbell's": [
+      {
+        "timestamp": "2026-03-28T15:47:22.052207+00:00",
+        "adjusted_count": 28.7
+      },
+      {
+        "timestamp": "2026-03-28T16:10:49.067965+00:00",
+        "adjusted_count": 1.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:20.154242+00:00",
+        "adjusted_count": 1.0
+      }
+    ],
+    "J.M. Smucker": [
+      {
+        "timestamp": "2026-03-28T15:47:25.158453+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T16:10:54.488589+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:26.304882+00:00",
+        "adjusted_count": 0.0
+      }
+    ],
+    "Conagra": [
+      {
+        "timestamp": "2026-03-28T15:47:28.201101+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T16:11:00.111180+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:32.131918+00:00",
+        "adjusted_count": 0.0
+      }
+    ],
+    "Hormel": [
+      {
+        "timestamp": "2026-03-28T15:47:31.530180+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T16:11:05.628832+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:37.989938+00:00",
+        "adjusted_count": 0.0
+      }
+    ],
+    "McCormick": [
+      {
+        "timestamp": "2026-03-28T15:47:38.080002+00:00",
+        "adjusted_count": 2.0
+      },
+      {
+        "timestamp": "2026-03-28T16:11:17.568275+00:00",
+        "adjusted_count": 4.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:51.211289+00:00",
+        "adjusted_count": 4.0
+      }
+    ],
+    "Clorox": [
+      {
+        "timestamp": "2026-03-28T15:47:41.790831+00:00",
+        "adjusted_count": 2.0999999999999996
+      },
+      {
+        "timestamp": "2026-03-28T16:11:23.119519+00:00",
+        "adjusted_count": 3.0
+      },
+      {
+        "timestamp": "2026-03-28T17:12:57.788023+00:00",
+        "adjusted_count": 3.0
+      }
+    ],
+    "Church & Dwight": [
+      {
+        "timestamp": "2026-03-28T15:47:45.543595+00:00",
+        "adjusted_count": 2.0999999999999996
+      },
+      {
+        "timestamp": "2026-03-28T16:11:28.699561+00:00",
+        "adjusted_count": 3.0
+      },
+      {
+        "timestamp": "2026-03-28T17:13:04.492661+00:00",
+        "adjusted_count": 3.0
+      }
+    ],
+    "Energizer": [
+      {
+        "timestamp": "2026-03-28T15:47:48.818209+00:00",
+        "adjusted_count": 505.04999999999995
+      },
+      {
+        "timestamp": "2026-03-28T16:11:34.615518+00:00",
+        "adjusted_count": 9.0
+      },
+      {
+        "timestamp": "2026-03-28T17:13:11.156559+00:00",
+        "adjusted_count": 9.0
+      }
+    ],
+    "Coty": [
+      {
+        "timestamp": "2026-03-28T15:47:52.128175+00:00",
+        "adjusted_count": 14.0
+      },
+      {
+        "timestamp": "2026-03-28T16:11:40.752914+00:00",
+        "adjusted_count": 4.0
+      },
+      {
+        "timestamp": "2026-03-28T17:13:17.811188+00:00",
+        "adjusted_count": 4.0
+      }
+    ],
+    "Est\u00c3\u00a9e Lauder": [
+      {
+        "timestamp": "2026-03-28T15:47:55.248620+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T16:11:46.182081+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T17:13:23.432360+00:00",
+        "adjusted_count": 0.0
+      }
+    ],
+    "Colgate": [
+      {
+        "timestamp": "2026-03-28T15:47:58.872129+00:00",
+        "adjusted_count": 14.7
+      },
+      {
+        "timestamp": "2026-03-28T16:11:52.143806+00:00",
+        "adjusted_count": 21.0
+      },
+      {
+        "timestamp": "2026-03-28T17:13:29.738250+00:00",
+        "adjusted_count": 21.0
+      }
+    ],
+    "Reckitt": [
+      {
+        "timestamp": "2026-03-28T15:48:02.611656+00:00",
+        "adjusted_count": 1.4
+      },
+      {
+        "timestamp": "2026-03-28T16:11:57.825925+00:00",
+        "adjusted_count": 2.0
+      },
+      {
+        "timestamp": "2026-03-28T17:13:36.040780+00:00",
+        "adjusted_count": 2.0
+      }
+    ],
+    "Newell Brands": [
+      {
+        "timestamp": "2026-03-28T15:48:06.593059+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T16:12:03.351094+00:00",
+        "adjusted_count": 0.0
+      },
+      {
+        "timestamp": "2026-03-28T17:13:42.182778+00:00",
+        "adjusted_count": 0.0
       }
     ]
   }
