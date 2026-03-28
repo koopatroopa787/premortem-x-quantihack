@@ -1,0 +1,49 @@
+{
+  "companies": [
+    {
+      "ticker": "UL",
+      "name": "Unilever",
+      "reddit_keywords": ["Unilever", "Dove soap", "Hellmann's"],
+      "fda_search": "unilever",
+      "adzuna_search": "Unilever supply chain",
+      "wiki_page": "Unilever",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "PG",
+      "name": "Procter & Gamble",
+      "reddit_keywords": ["P&G", "Tide", "Pampers"],
+      "fda_search": "procter",
+      "adzuna_search": "Procter & Gamble logistics",
+      "wiki_page": "Procter_%26_Gamble",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "KO",
+      "name": "Coca-Cola",
+      "reddit_keywords": ["Coca-Cola", "Coke"],
+      "fda_search": "coca-cola",
+      "adzuna_search": "Coca-Cola supply",
+      "wiki_page": "The_Coca-Cola_Company",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "PEP",
+      "name": "PepsiCo",
+      "reddit_keywords": ["Pepsi", "Doritos", "Lays"],
+      "fda_search": "pepsico",
+      "adzuna_search": "PepsiCo procurement",
+      "wiki_page": "PepsiCo",
+      "sector": "CPG"
+    },
+    {
+      "ticker": "HSY",
+      "name": "Hershey",
+      "reddit_keywords": ["Hershey", "Reese's"],
+      "fda_search": "hershey",
+      "adzuna_search": "Hershey logistics",
+      "wiki_page": "The_Hershey_Company",
+      "sector": "CPG"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+:root {
+  --bg-color: #000000;
+  --text-color: #FFFFFF;
+  --card-bg: #121212;
+  --card-border: #2A2A2A;
+  --accent-red: #E63946; /* ONLY for critical alerts */
+  --font-mono: 'Roboto Mono', monospace;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-mono);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 16px;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover {
+  border-color: #444;
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.metric-label {
+  font-size: 10px;
+  color: #888;
+}
+
+.dot-grid {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 2px;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  background: #333;
+  border-radius: 50%;
+}
+
+.dot.active {
+  background: #FFFFFF;
+  box-shadow: 0 0 4px #FFFFFF;
+}
+
+.critical-alert {
+  border: 1px solid var(--accent-red);
+  background: rgba(230, 57, 70, 0.05);
+}

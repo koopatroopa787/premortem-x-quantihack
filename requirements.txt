@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pandas
+requests
+praw
+fredapi
+spacy
+pytrends
+python-dotenv
+pytest
+pytest-asyncio
