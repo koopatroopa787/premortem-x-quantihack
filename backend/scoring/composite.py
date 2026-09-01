@@ -131,7 +131,14 @@ class CompositeScorer:
         # Scale to 0-10
         score = round(min(total_score * 10, 10.0), 2)
         status = _get_status(score)
-        last_updated = company_data.get("last_updated") or datetime.now(timezone.utc).isoformat()
+        # "last_updated" is hand-seeded in data_store.json and no collector ever
+        # rewrites it, so it stayed frozen at the seed date through every
+        # refresh. The collectors do maintain "updated_at" — prefer that.
+        last_updated = (
+            company_data.get("updated_at")
+            or company_data.get("last_updated")
+            or datetime.now(timezone.utc).isoformat()
+        )
 
         return {
             "ticker":           ticker,

@@ -47,6 +47,7 @@
     },
     {
       "ticker": "K",
+      "cik": "0000055067",
       "name": "Kellanova",
       "reddit_keywords": ["Kellanova", "Pringles", "Cheez-It"],
       "fda_search": "kellanova",

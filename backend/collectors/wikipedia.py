@@ -22,7 +22,12 @@ RELATED_PAGE_LIMIT = 25
 TOP_K_STRESSED = 10
 REQUEST_TIMEOUT_SECONDS = 20
 WIKI_HEADERS = {
-    "User-Agent": "PreMortemMachine/0.1 (research collector)",
+    # Wikimedia's UA policy wants a contact URL; generic agents get rate-limited
+    # hard, which is what was quietly starving this collector.
+    "User-Agent": (
+        "PreMortemMachine/0.1 "
+        "(https://github.com/koopatroopa787/premortem-x-quantihack)"
+    ),
     "Accept": "application/json",
 }
 
@@ -69,7 +74,7 @@ def save_json(path: Path, payload: Dict) -> None:
 
 def wiki_request(params: Dict) -> Dict:
     last_error = None
-    for attempt in range(3):
+    for attempt in range(4):
         try:
             response = requests.get(
                 WIKI_API_URL,
@@ -77,12 +82,18 @@ def wiki_request(params: Dict) -> Dict:
                 headers=WIKI_HEADERS,
                 timeout=REQUEST_TIMEOUT_SECONDS,
             )
+            if response.status_code == 429:
+                # A 21-company refresh trips Wikimedia's limiter every time.
+                # Wait as long as they ask rather than retrying blind.
+                retry_after = response.headers.get("Retry-After")
+                wait = float(retry_after) if retry_after and retry_after.isdigit() else 5.0 * (attempt + 1)
+                last_error = requests.HTTPError("429 Too Many Requests")
+                sleep(min(wait, 60.0))
+                continue
             response.raise_for_status()
             return response.json()
         except requests.RequestException as exc:
             last_error = exc
-            # Wikipedia throttles a full 21-company refresh; a flat retry just
-            # burns the budget faster. Back off instead.
             sleep(0.5 * (3 ** attempt))
 
     raise last_error if last_error else RuntimeError("Wikipedia request failed")
@@ -157,9 +168,13 @@ def discover_related_pages(
             break
         sleep(0.2)
 
-    seed_tokens = title_tokens(company_name)
-    for kw in keywords:
-        seed_tokens.update(title_tokens(kw))
+    # Each of the company name and the brand keywords is a PHRASE: a title
+    # matches only if it contains every token of at least one of them. Matching
+    # loose tokens instead lets "General Mills" pull in General_Dynamics and
+    # Dollar_General on the shared word "general".
+    phrases = [title_tokens(company_name)]
+    phrases.extend(title_tokens(kw) for kw in keywords)
+    phrases = [p for p in phrases if p]
 
     deduped = []
     seen = set()
@@ -178,9 +193,10 @@ def discover_related_pages(
     # carries 25% of the composite weight. Keep only real lexical matches.
     candidates: List[Tuple[float, str]] = []
     for title in deduped:
-        overlap = len(title_tokens(title) & seed_tokens)
-        if overlap > 0:
-            candidates.append((float(overlap), title))
+        tokens = title_tokens(title)
+        matched = [p for p in phrases if p <= tokens]
+        if matched:
+            candidates.append((float(max(len(p) for p in matched)), title))
 
     candidates.sort(key=lambda item: (-item[0], item[1]))
 

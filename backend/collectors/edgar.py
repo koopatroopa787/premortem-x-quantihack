@@ -112,13 +112,18 @@ def _request_text(url: str) -> str:
     raise last_error if last_error else RuntimeError("SEC text request failed")
 
 
-def _ticker_to_cik(ticker: str) -> str:
+def _ticker_to_cik(ticker: str, fallback_cik: str = "") -> str:
     payload = _request_json(SEC_TICKERS_URL)
     normalized = ticker.upper().strip()
 
     for row in payload.values():
         if str(row.get("ticker", "")).upper() == normalized:
             return str(row.get("cik_str", "")).zfill(10)
+
+    # company_tickers.json does not list every filer — Kellanova (K) is absent
+    # from it despite filing 8-Ks — so companies.json may carry an explicit cik.
+    if fallback_cik:
+        return str(fallback_cik).zfill(10)
 
     raise ValueError(f"Ticker not found in SEC directory: {ticker}")
 
@@ -194,13 +199,13 @@ def _filing_activity_component(filings: List[Dict], now: datetime) -> float:
     return _clamp01((0.6 * burst_component) + (0.4 * sustained_component))
 
 
-def fetch_edgar_8k_score(ticker: str, max_filings: int = MAX_8K_LOOKBACK) -> float:
+def fetch_edgar_8k_score(ticker: str, max_filings: int = MAX_8K_LOOKBACK, cik: str = "") -> float:
     """
     Fetch recent SEC 8-K filings for ticker and return normalized EDGAR risk score in [0,1].
     This output is directly compatible with composite scoring weights.
     """
     try:
-        cik_padded = _ticker_to_cik(ticker)
+        cik_padded = _ticker_to_cik(ticker, fallback_cik=cik)
         filings = _collect_recent_8k_filings(cik_padded, max_filings=max_filings)
         if not filings:
             return 0.0
@@ -275,7 +280,7 @@ def run_company_edgar_pipeline():
     updated_at = datetime.now(timezone.utc).isoformat()
     for company in companies:
         ticker = company["ticker"]
-        signal = fetch_edgar_8k_score(ticker)
+        signal = fetch_edgar_8k_score(ticker, cik=company.get("cik", ""))
         
         company_record = store.get(ticker, {})
         signals = company_record.get("signals", {})
