@@ -11,10 +11,15 @@ from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 
 # ─── Constants ────────────────────────────────────────────────────────────────
+# These are the six weights documented in the README. google_trends was absent
+# from the code and its 20% had been absorbed into FDA (0.25 -> 0.35), Wikipedia
+# (0.20 -> 0.25) and FRED (0.15 -> 0.20), so the running model and the
+# documented model disagreed. Restored to match the README.
 WEIGHTS: Dict[str, float] = {
-    "fda_recall_velocity": 0.35,
-    "wikipedia_edit_wars": 0.25,
-    "fred_macro_backdrop": 0.20,
+    "fda_recall_velocity": 0.25,
+    "google_trends":       0.20,
+    "wikipedia_edit_wars": 0.20,
+    "fred_macro_backdrop": 0.15,
     "adzuna_job_velocity": 0.12,
     "edgar_8k_keywords":    0.08,
 }
@@ -115,17 +120,28 @@ class CompositeScorer:
         degraded: List[str] = []
         total_score = 0.0
 
+        # An unavailable signal is an absence of evidence, not evidence of calm.
+        # Scoring it as 0.0 against its full weight made a company with a failed
+        # collector look SAFER than one whose data arrived, so renormalise over
+        # the signals we actually have.
+        available_weight = sum(w for s, w in WEIGHTS.items() if s in normed)
+
         for signal, weight in WEIGHTS.items():
             available = signal in normed
             if not available:
                 degraded.append(signal)
-            raw_val = normed.get(signal, 0.0)
-            weighted = round(raw_val * weight, 4)
+                signals_output[signal] = {
+                    "raw": 0.0, "weighted": 0.0, "available": False,
+                }
+                continue
+            raw_val = normed[signal]
+            effective_weight = weight / available_weight if available_weight else 0.0
+            weighted = round(raw_val * effective_weight, 4)
             total_score += weighted
             signals_output[signal] = {
                 "raw":       round(raw_val, 4),
                 "weighted":  weighted,
-                "available": available,
+                "available": True,
             }
 
         # Scale to 0-10
