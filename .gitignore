@@ -8,3 +8,5 @@ __pycache__/
 .venv/
 venv/
 backend/store/live_snapshot.json
+backend/store/news.json
+backend/store/signal_history.json

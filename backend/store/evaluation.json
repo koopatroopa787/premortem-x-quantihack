@@ -1,0 +1,84 @@
+{
+  "generated_at": "2026-09-01T12:43:19.516351",
+  "method": "Real FDA recalls vs reconstructed predictors. Positive = predictor 30d before a recall; control = random no-recall date from the same company. Metric = AUC (0.5 is chance).",
+  "lead_days": 30,
+  "severity_min": 3,
+  "predictors": {
+    "edgar_8k_burst": {
+      "events_used": 54,
+      "controls_used": 211,
+      "auc": 0.38,
+      "verdict": "inverted (fires after, not before)",
+      "per_company": {
+        "GIS": {
+          "events_used": 3,
+          "controls": 43,
+          "auc": 0.74
+        },
+        "SJM": {
+          "events_used": 26,
+          "controls": 104,
+          "auc": 0.237
+        },
+        "CAG": {
+          "events_used": 6,
+          "controls": 37,
+          "auc": 0.36
+        },
+        "MKC": {
+          "events_used": 3,
+          "controls": 3,
+          "auc": 0.5
+        },
+        "CHD": {
+          "events_used": 4,
+          "controls": 16,
+          "auc": 0.141
+        }
+      }
+    },
+    "wikipedia_velocity": {
+      "events_used": 103,
+      "controls_used": 348,
+      "auc": 0.341,
+      "verdict": "inverted (fires after, not before)",
+      "per_company": {
+        "UL": {
+          "events_used": 5,
+          "controls": 20,
+          "auc": 0.53
+        },
+        "GIS": {
+          "events_used": 25,
+          "controls": 100,
+          "auc": 0.54
+        },
+        "SJM": {
+          "events_used": 26,
+          "controls": 104,
+          "auc": 0.075
+        },
+        "CAG": {
+          "events_used": 12,
+          "controls": 48,
+          "auc": 0.252
+        },
+        "HSY": {
+          "events_used": 4,
+          "controls": 16,
+          "auc": 0.656
+        },
+        "MKC": {
+          "events_used": 9,
+          "controls": 36,
+          "auc": 0.296
+        },
+        "CHD": {
+          "events_used": 4,
+          "controls": 16,
+          "auc": 0.719
+        }
+      }
+    }
+  }
+}

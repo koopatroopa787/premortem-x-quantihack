@@ -134,6 +134,10 @@ def discover_related_pages(
         "prop": "links",
         "pllimit": "max",
         "plnamespace": 0,
+        # 4 of the 20 wiki_page titles are redirect stubs (The_Clorox_Company ->
+        # Clorox, etc). Without this the API answers about the stub: no links,
+        # one revision, and a silently empty signal.
+        "redirects": 1,
     }
 
     # Pull enough linked pages to rank candidates while keeping requests bounded.
@@ -218,6 +222,7 @@ def fetch_recent_revisions(page_title: str, limit: int = 200) -> List[Dict]:
         "titles": normalize_title(page_title),
         "rvlimit": limit,
         "rvprop": "timestamp|user|comment",
+        "redirects": 1,
     }
     try:
         payload = wiki_request(params)

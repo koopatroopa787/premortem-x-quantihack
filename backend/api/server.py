@@ -349,6 +349,76 @@ async def get_live_updates():
     return JSONResponse(payload)
 
 
+# ─── Reality check: what actually happened, and did we call it ────────────────
+
+_STORE_DIR = os.path.join(_HERE, "..", "store")
+
+
+def _load_store_file(filename: str) -> Dict[str, Any]:
+    path = os.path.join(_STORE_DIR, filename)
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError) as exc:
+        logger.warning("could not read %s: %s", filename, exc)
+        return {}
+
+
+@app.get("/news/{ticker}")
+async def get_news(ticker: str):
+    """Recent supply-chain news for one company — the 'what actually happened'."""
+    store = _load_store_file("news.json")
+    company = store.get("companies", {}).get(ticker.upper())
+    if company is None:
+        raise HTTPException(status_code=404, detail=f"No news for {ticker}")
+    return JSONResponse({
+        "ticker": ticker.upper(),
+        "generated_at": store.get("generated_at"),
+        "source": store.get("source"),
+        **company,
+    })
+
+
+@app.get("/events/{ticker}")
+async def get_events(ticker: str):
+    """
+    Real FDA recall history for one company. Every entry carries an FDA
+    recall_number, so each one can be independently verified.
+    """
+    store = _load_store_file("fda_events.json")
+    company = store.get("companies", {}).get(ticker.upper())
+    if company is None:
+        raise HTTPException(status_code=404, detail=f"No event history for {ticker}")
+    events = company.get("events", [])
+    return JSONResponse({
+        "ticker": ticker.upper(),
+        "source": store.get("source"),
+        "event_count": len(events),
+        "events": list(reversed(events))[:50],
+    })
+
+
+@app.get("/evaluation")
+async def get_evaluation():
+    """
+    Measured predictive performance against real FDA recalls.
+
+    This is deliberately blunt: it reports AUC against real events, including
+    when that AUC says the signal is no better than chance. It replaces the old
+    "backtest", which scored the model against events invented by
+    random.Random(42).
+    """
+    results = _load_store_file("evaluation.json")
+    if not results:
+        return JSONResponse({
+            "available": False,
+            "message": "No evaluation has been run yet.",
+        })
+    return JSONResponse({"available": True, **results})
+
+
 # ─── Server entry ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
