@@ -1,0 +1,7 @@
+# Only needed to run backend/refresh_data.py (repopulates backend/store/data_store.json).
+# Kept out of requirements.txt so deploying the API does not pull heavy wheels.
+requests
+python-dotenv
+praw
+fredapi
+pytrends

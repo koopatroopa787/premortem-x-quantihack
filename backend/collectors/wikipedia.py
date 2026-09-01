@@ -69,7 +69,7 @@ def save_json(path: Path, payload: Dict) -> None:
 
 def wiki_request(params: Dict) -> Dict:
     last_error = None
-    for _ in range(3):
+    for attempt in range(3):
         try:
             response = requests.get(
                 WIKI_API_URL,
@@ -81,7 +81,9 @@ def wiki_request(params: Dict) -> Dict:
             return response.json()
         except requests.RequestException as exc:
             last_error = exc
-            sleep(0.5)
+            # Wikipedia throttles a full 21-company refresh; a flat retry just
+            # burns the budget faster. Back off instead.
+            sleep(0.5 * (3 ** attempt))
 
     raise last_error if last_error else RuntimeError("Wikipedia request failed")
 
@@ -131,7 +133,15 @@ def discover_related_pages(
 
         try:
             payload = wiki_request(params)
-        except Exception:
+        except Exception as exc:
+            # Silent break here used to leave the company with only its seed
+            # page, which looks identical to "this company has no related
+            # pages" in the store. Say so out loud.
+            print(
+                f"  ! link discovery for {seed_page} failed after "
+                f"{len(collected_titles)} titles: {exc}",
+                file=sys.stderr,
+            )
             break
 
         pages = payload.get("query", {}).get("pages", {})
@@ -145,6 +155,7 @@ def discover_related_pages(
         continue_token = payload.get("continue", {}).get("plcontinue")
         if not continue_token:
             break
+        sleep(0.2)
 
     seed_tokens = title_tokens(company_name)
     for kw in keywords:
@@ -158,34 +169,28 @@ def discover_related_pages(
             seen.add(normalized)
             deduped.append(normalized)
 
-    primary_candidates: List[Tuple[float, str]] = []
-    fallback_candidates: List[Tuple[float, str]] = []
-    for idx, title in enumerate(deduped):
-        tokens = title_tokens(title)
-        overlap = len(tokens & seed_tokens)
-        # Earlier links on the company page are usually more central.
-        centrality_boost = max(0.0, (200.0 - idx) / 200.0)
-        score = overlap * 2.0 + centrality_boost
+    # NOTE: prop=links returns titles in ALPHABETICAL order, not page order.
+    # The old code gave a "centrality boost" to the first ~30 titles on the
+    # assumption they were the most central links, and admitted them even with
+    # zero name overlap. Alphabetically-first is not central: that is how
+    # Unilever ended up scored on ASML_Holding, P&G on Adobe_Inc./Actavis, and
+    # General Mills on 1998_Winter_Olympics/3M — all feeding a signal that
+    # carries 25% of the composite weight. Keep only real lexical matches.
+    candidates: List[Tuple[float, str]] = []
+    for title in deduped:
+        overlap = len(title_tokens(title) & seed_tokens)
         if overlap > 0:
-            primary_candidates.append((score, title))
-        elif centrality_boost > 0.85:
-            fallback_candidates.append((centrality_boost, title))
+            candidates.append((float(overlap), title))
 
-    primary_candidates.sort(key=lambda item: (-item[0], item[1]))
-    fallback_candidates.sort(key=lambda item: (-item[0], item[1]))
+    candidates.sort(key=lambda item: (-item[0], item[1]))
 
     related = [normalize_title(seed_page)]
-    for _, title in primary_candidates:
+    for _, title in candidates:
         if title not in related:
             related.append(title)
         if len(related) >= limit:
             break
 
-    for _, title in fallback_candidates:
-        if title not in related:
-            related.append(title)
-        if len(related) >= limit:
-            break
     return related[:limit]
 
 

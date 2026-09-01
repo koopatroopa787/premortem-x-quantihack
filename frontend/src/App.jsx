@@ -70,7 +70,7 @@ function App() {
   // ── Welcome message ──────────────────────────────────────────────────────
   useEffect(() => {
     console.log('%c[POST MORTEM]', 'color: #00FF94; font-size: 14px; font-weight: bold');
-    console.log('%cDashboard initialised. Backend: http://localhost:8000', 'color: #6B8299');
+    console.log('%cDashboard initialised. Backend: /api', 'color: #6B8299');
     console.log('%cPolling /live every 60s. Press R to force refresh.', 'color: #6B8299');
   }, []);
 

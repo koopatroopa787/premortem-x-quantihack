@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 .env
 .vite/
+.venv/
+venv/
+backend/store/live_snapshot.json

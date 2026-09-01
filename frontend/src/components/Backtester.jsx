@@ -332,7 +332,7 @@ export default function BacktesterV2() {
 
   useEffect(() => {
     // Fetch real current signal values from backend
-    fetch("http://localhost:8000/companies")
+    fetch("/api/companies")
       .then(r => r.json())
       .then(data => {
         if (data?.companies) {

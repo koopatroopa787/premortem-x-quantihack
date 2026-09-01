@@ -8,7 +8,7 @@ const TIMEOUT_MS = 5000;
 
 class ApiClient {
   /**
-   * @param {string} baseUrl  e.g. "http://localhost:8000"
+   * @param {string} baseUrl  e.g. "/api"
    */
   constructor(baseUrl) {
     this._base = baseUrl.replace(/\/$/, '');
@@ -75,5 +75,5 @@ class ApiClient {
   }
 }
 
-export const api = new ApiClient('http://localhost:8000');
+export const api = new ApiClient(import.meta.env.VITE_API_BASE ?? '/api');
 export default ApiClient;

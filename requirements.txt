@@ -1,14 +1,3 @@
+# Serving the API needs nothing but these two — the scoring layer is stdlib only.
 fastapi
 uvicorn[standard]
-pandas
-requests
-praw
-fredapi
-spacy
-pytrends
-python-dotenv
-pytest
-pytest-asyncio
-pydantic
-python-dateutil
-httpx
