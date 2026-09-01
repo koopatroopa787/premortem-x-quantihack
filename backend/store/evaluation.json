@@ -1,83 +1,195 @@
 {
-  "generated_at": "2026-09-01T12:43:19.516351",
+  "generated_at": "2026-09-01T12:46:39.318534",
   "method": "Real FDA recalls vs reconstructed predictors. Positive = predictor 30d before a recall; control = random no-recall date from the same company. Metric = AUC (0.5 is chance).",
   "lead_days": 30,
-  "severity_min": 3,
+  "severity_min": 0,
   "predictors": {
     "edgar_8k_burst": {
-      "events_used": 54,
-      "controls_used": 211,
-      "auc": 0.38,
-      "verdict": "inverted (fires after, not before)",
+      "events_used": 154,
+      "controls_used": 743,
+      "auc": 0.51,
+      "verdict": "no better than chance",
       "per_company": {
+        "PG": {
+          "events_used": 20,
+          "controls": 17,
+          "auc": 0.709
+        },
+        "KO": {
+          "events_used": 24,
+          "controls": 177,
+          "auc": 0.508
+        },
+        "PEP": {
+          "events_used": 23,
+          "controls": 92,
+          "auc": 0.559
+        },
         "GIS": {
-          "events_used": 3,
-          "controls": 43,
-          "auc": 0.74
+          "events_used": 6,
+          "controls": 103,
+          "auc": 0.491
         },
         "SJM": {
-          "events_used": 26,
-          "controls": 104,
-          "auc": 0.237
+          "events_used": 36,
+          "controls": 157,
+          "auc": 0.407
         },
         "CAG": {
-          "events_used": 6,
+          "events_used": 22,
+          "controls": 85,
+          "auc": 0.497
+        },
+        "HRL": {
+          "events_used": 9,
           "controls": 37,
-          "auc": 0.36
+          "auc": 0.374
         },
         "MKC": {
-          "events_used": 3,
-          "controls": 3,
-          "auc": 0.5
+          "events_used": 5,
+          "controls": 26,
+          "auc": 0.777
         },
         "CHD": {
-          "events_used": 4,
-          "controls": 16,
-          "auc": 0.141
+          "events_used": 5,
+          "controls": 20,
+          "auc": 0.14
         }
       }
     },
     "wikipedia_velocity": {
-      "events_used": 103,
-      "controls_used": 348,
-      "auc": 0.341,
-      "verdict": "inverted (fires after, not before)",
+      "events_used": 372,
+      "controls_used": 1472,
+      "auc": 0.436,
+      "verdict": "no better than chance",
       "per_company": {
         "UL": {
-          "events_used": 5,
-          "controls": 20,
-          "auc": 0.53
+          "events_used": 15,
+          "controls": 60,
+          "auc": 0.561
+        },
+        "PG": {
+          "events_used": 31,
+          "controls": 124,
+          "auc": 0.384
+        },
+        "KO": {
+          "events_used": 79,
+          "controls": 316,
+          "auc": 0.445
+        },
+        "PEP": {
+          "events_used": 23,
+          "controls": 92,
+          "auc": 0.616
         },
         "GIS": {
-          "events_used": 25,
-          "controls": 100,
-          "auc": 0.54
+          "events_used": 41,
+          "controls": 164,
+          "auc": 0.487
+        },
+        "CPB": {
+          "events_used": 4,
+          "controls": 16,
+          "auc": 0.398
         },
         "SJM": {
-          "events_used": 26,
-          "controls": 104,
-          "auc": 0.075
+          "events_used": 48,
+          "controls": 192,
+          "auc": 0.298
         },
         "CAG": {
-          "events_used": 12,
-          "controls": 48,
-          "auc": 0.252
+          "events_used": 33,
+          "controls": 132,
+          "auc": 0.313
+        },
+        "HRL": {
+          "events_used": 10,
+          "controls": 40,
+          "auc": 0.615
         },
         "HSY": {
-          "events_used": 4,
-          "controls": 16,
-          "auc": 0.656
+          "events_used": 5,
+          "controls": 20,
+          "auc": 0.67
         },
         "MKC": {
-          "events_used": 9,
-          "controls": 36,
-          "auc": 0.296
+          "events_used": 19,
+          "controls": 73,
+          "auc": 0.38
+        },
+        "CLX": {
+          "events_used": 5,
+          "controls": 20,
+          "auc": 0.67
         },
         "CHD": {
-          "events_used": 4,
-          "controls": 16,
-          "auc": 0.719
+          "events_used": 32,
+          "controls": 119,
+          "auc": 0.454
+        },
+        "EL": {
+          "events_used": 3,
+          "controls": 12,
+          "auc": 0.236
+        },
+        "CL": {
+          "events_used": 7,
+          "controls": 28,
+          "auc": 0.77
+        },
+        "RBGLY": {
+          "events_used": 16,
+          "controls": 64,
+          "auc": 0.337
         }
+      }
+    }
+  },
+  "horizon_sweep": {
+    "horizons": [
+      90,
+      60,
+      30,
+      14,
+      7,
+      0,
+      -7,
+      -14,
+      -30
+    ],
+    "rows": {
+      "edgar_8k_burst": {
+        "90": 0.616,
+        "60": 0.443,
+        "30": 0.51,
+        "14": 0.501,
+        "7": 0.438,
+        "0": 0.554,
+        "-7": 0.622,
+        "-14": 0.611,
+        "-30": 0.532
+      },
+      "wikipedia_velocity": {
+        "90": 0.474,
+        "60": 0.538,
+        "30": 0.436,
+        "14": 0.497,
+        "7": 0.484,
+        "0": 0.471,
+        "-7": 0.443,
+        "-14": 0.46,
+        "-30": 0.481
+      }
+    },
+    "class_i_only": {
+      "edgar_8k_burst": {
+        "auc": 0.38,
+        "events_used": 54
+      },
+      "wikipedia_velocity": {
+        "auc": 0.341,
+        "events_used": 103
       }
     }
   }

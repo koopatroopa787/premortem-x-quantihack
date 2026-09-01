@@ -13,6 +13,8 @@ from backend.collectors.fred import run_company_fred_pipeline
 from backend.collectors.adzuna import run_company_adzuna_pipeline
 from backend.collectors.edgar import run_company_edgar_pipeline
 from backend.collectors.trends import run_company_trends_pipeline
+from backend.collectors.news import run_company_news_pipeline
+from backend.collectors.fda_events import run_fda_events_pipeline
 
 def refresh_all():
     print("\n" + "="*50)
@@ -26,6 +28,8 @@ def refresh_all():
         ("Adzuna Jobs", run_company_adzuna_pipeline),
         ("EDGAR filings", run_company_edgar_pipeline),
         ("Google Trends", run_company_trends_pipeline),
+        ("News watch", run_company_news_pipeline),
+        ("FDA event ground truth", run_fda_events_pipeline),
     ]
     
     for name, func in collectors:

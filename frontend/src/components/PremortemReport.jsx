@@ -4,7 +4,7 @@
  * The Pre-Mortem Machine — Team APEX
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   formatDateTime,
   formatScore,
@@ -22,16 +22,11 @@ const SIGNAL_ORDER = [
   'edgar_8k_keywords',
 ];
 
-// ── Validated global backtest averages ────────────────────────────────────────
-// These are the fallback values sourced from 20 real CPG events 2021-2024.
-// They are used when the API returns 0s (cold start / cache miss) so the
-// card never displays zeros to judges.
-const BACKTEST_FALLBACK = {
-  avg_lead_days: 19,
-  accuracy_rate: 0.71,
-  events_analysed: 20,
-  methodology: 'Composite signal vs. 20 real CPG events, 2021-2024.',
-};
+// There used to be a BACKTEST_FALLBACK here — 19 avg lead days, 71% accuracy,
+// "20 real CPG events" — substituted whenever the API returned nothing, so the
+// card "never displays zeros to judges". Those numbers were not measured from
+// anything. The card below now shows the real evaluation from /evaluation, and
+// shows nothing at all when no evaluation has been run.
 
 const MOCK_REPORT = {
   report_title: 'PRELIMINARY POST-MORTEM REPORT',
@@ -48,11 +43,6 @@ const MOCK_REPORT = {
     'Consumer: Google Trends OOS search velocity elevated (72%) — Source: pytrends',
     'Supply chain: Shared supplier with 3 companies, 1 currently CRITICAL',
   ],
-  backtest_summary: {
-    avg_lead_days: 19,
-    accuracy_rate: 0.71,
-    events_analysed: 20,
-  },
   signals: {
     fda_recall_velocity: { raw: 0.80, weighted: 0.200, available: true },
     google_trends: { raw: 0.65, weighted: 0.130, available: true },
@@ -120,18 +110,22 @@ export default function PremortemReport({ report: reportProp, loading }) {
   const isStale = report.stale === true;
   const confPct = Math.round((report.confidence ?? 0) * 100);
 
-  // Defensive merge: spread BACKTEST_FALLBACK first, then the API values on top.
-  // This means any field the API returns as 0, null, or undefined falls back
-  // to the validated global average instead of rendering as zero.
-  // The spread order matters: API values win when they are truthy non-zero.
-  const rawBt = report.backtest_summary || {};
-  const bt = {
-    ...BACKTEST_FALLBACK,
-    ...(rawBt.avg_lead_days ? { avg_lead_days: rawBt.avg_lead_days } : {}),
-    ...(rawBt.accuracy_rate ? { accuracy_rate: rawBt.accuracy_rate } : {}),
-    ...(rawBt.events_analysed ? { events_analysed: rawBt.events_analysed } : {}),
-    ...(rawBt.methodology ? { methodology: rawBt.methodology } : {}),
-  };
+  // Measured performance against real FDA recalls, or nothing. No substitutions.
+  const [evaluation, setEvaluation] = useState(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/evaluation')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (!cancelled && d && d.available) setEvaluation(d); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  const best = evaluation
+    ? Object.entries(evaluation.predictors || {})
+        .filter(([, v]) => typeof v.auc === 'number')
+        .sort((a, b) => b[1].auc - a[1].auc)[0]
+    : null;
 
   if (loading) {
     return (
@@ -304,7 +298,7 @@ export default function PremortemReport({ report: reportProp, loading }) {
             </div>
           </div>
 
-          {/* Backtest Validation Card */}
+          {/* Measured Performance Card — real evaluation or nothing */}
           <div className="card" style={{
             background: 'var(--primary)',
             color: 'white',
@@ -314,60 +308,77 @@ export default function PremortemReport({ report: reportProp, loading }) {
               color: 'rgba(255,255,255,0.7)',
               marginBottom: '24px',
             }}>
-              BACKTEST VALIDATION
-            </div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '24px',
-            }}>
-              <div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>
-                  {bt.avg_lead_days}
-                </div>
-                <div style={{
-                  fontSize: '0.65rem', fontWeight: 700,
-                  marginTop: '8px', opacity: 0.8,
-                }}>
-                  AVG LEAD DAYS
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>
-                  {Math.round(bt.accuracy_rate * 100)}%
-                </div>
-                <div style={{
-                  fontSize: '0.65rem', fontWeight: 700,
-                  marginTop: '8px', opacity: 0.8,
-                }}>
-                  ACCURACY
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>
-                  {bt.events_analysed}
-                </div>
-                <div style={{
-                  fontSize: '0.65rem', fontWeight: 700,
-                  marginTop: '8px', opacity: 0.8,
-                }}>
-                  EVENTS TRACKED
-                </div>
-              </div>
+              MEASURED PERFORMANCE
             </div>
 
-            {/* Methodology note */}
-            <div style={{
-              marginTop: '20px',
-              paddingTop: '16px',
-              borderTop: '1px solid rgba(255,255,255,0.15)',
-              fontSize: '0.65rem',
-              opacity: 0.6,
-              lineHeight: 1.6,
-              fontFamily: 'var(--font-labels)',
-            }}>
-              {bt.methodology}
-            </div>
+            {!evaluation || !best ? (
+              <div style={{ fontSize: '0.8rem', opacity: 0.75, lineHeight: 1.7 }}>
+                No evaluation has been run against real events yet.
+                <div style={{ marginTop: '10px', fontSize: '0.65rem', opacity: 0.8 }}>
+                  This space previously showed a fixed 71% accuracy that was not
+                  measured from anything.
+                </div>
+              </div>
+            ) : (
+              <>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '24px',
+                }}>
+                  <div>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>
+                      {best[1].auc.toFixed(3)}
+                    </div>
+                    <div style={{
+                      fontSize: '0.65rem', fontWeight: 700,
+                      marginTop: '8px', opacity: 0.8,
+                    }}>
+                      AUC (0.500 = CHANCE)
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>
+                      {evaluation.lead_days}
+                    </div>
+                    <div style={{
+                      fontSize: '0.65rem', fontWeight: 700,
+                      marginTop: '8px', opacity: 0.8,
+                    }}>
+                      LEAD DAYS TESTED
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 800, lineHeight: 1 }}>
+                      {best[1].events_used}
+                    </div>
+                    <div style={{
+                      fontSize: '0.65rem', fontWeight: 700,
+                      marginTop: '8px', opacity: 0.8,
+                    }}>
+                      REAL FDA RECALLS
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{
+                  marginTop: '20px',
+                  paddingTop: '16px',
+                  borderTop: '1px solid rgba(255,255,255,0.15)',
+                  fontSize: '0.7rem',
+                  lineHeight: 1.6,
+                  fontFamily: 'var(--font-labels)',
+                }}>
+                  <div style={{ fontWeight: 800, marginBottom: '6px' }}>
+                    VERDICT: {String(best[1].verdict || '').toUpperCase()}
+                  </div>
+                  <div style={{ opacity: 0.6 }}>
+                    Best of {Object.keys(evaluation.predictors || {}).length} predictors
+                    ({best[0]}). {evaluation.method}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

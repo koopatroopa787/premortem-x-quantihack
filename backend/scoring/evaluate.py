@@ -215,7 +215,6 @@ def evaluate(
             "per_company": per_company,
         }
 
-    RESULTS_PATH.write_text(json.dumps(results, indent=2), encoding="utf-8")
     return results
 
 
@@ -255,6 +254,22 @@ def sweep() -> Dict[str, Any]:
     return table
 
 
+def run_and_persist() -> Dict[str, Any]:
+    """
+    Headline result + horizon sweep + Class I breakdown, written once.
+
+    evaluate() deliberately does not write: it is called ten times by the sweep,
+    and whichever call happened to run last would otherwise become "the"
+    published result. That is exactly how the Class-I-only number ended up
+    being served as the headline.
+    """
+    headline = evaluate()
+    table = sweep()
+    headline["horizon_sweep"] = table
+    RESULTS_PATH.write_text(json.dumps(headline, indent=2), encoding="utf-8")
+    return headline
+
+
 if __name__ == "__main__":
     out = evaluate()
     print(f"\n{out['method']}\n")
@@ -267,7 +282,8 @@ if __name__ == "__main__":
         )
 
     print("\nHorizon sweep (AUC; negative days = sampled AFTER the recall)")
-    table = sweep()
+    out["horizon_sweep"] = table = sweep()
+    RESULTS_PATH.write_text(json.dumps(out, indent=2), encoding="utf-8")
     header = "".join(f"{h:>7d}" for h in table["horizons"])
     print(f"  {'':22s}{header}")
     for name, row in table["rows"].items():
