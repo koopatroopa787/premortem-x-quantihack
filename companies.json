@@ -3,6 +3,7 @@
     {
       "ticker": "UL",
       "name": "Unilever",
+      "trends_search": "Unilever",
       "reddit_keywords": ["Unilever", "Dove soap", "Hellmann's"],
       "fda_search": "unilever",
       "adzuna_search": "Unilever supply chain",
@@ -12,6 +13,7 @@
     {
       "ticker": "PG",
       "name": "P&G",
+      "trends_search": "Tide detergent",
       "reddit_keywords": ["P&G", "Tide", "Pampers"],
       "fda_search": "procter",
       "adzuna_search": "Procter & Gamble logistics",
@@ -21,6 +23,7 @@
     {
       "ticker": "KO",
       "name": "Coca-Cola",
+      "trends_search": "Coca Cola",
       "reddit_keywords": ["Coca-Cola", "Coke"],
       "fda_search": "coca-cola",
       "adzuna_search": "Coca-Cola supply",
@@ -30,6 +33,7 @@
     {
       "ticker": "PEP",
       "name": "PepsiCo",
+      "trends_search": "Pepsi",
       "reddit_keywords": ["Pepsi", "Doritos", "Lays"],
       "fda_search": "pepsico",
       "adzuna_search": "PepsiCo procurement",
@@ -39,6 +43,7 @@
     {
       "ticker": "GIS",
       "name": "General Mills",
+      "trends_search": "Cheerios",
       "reddit_keywords": ["General Mills", "Cheerios", "Häagen-Dazs"],
       "fda_search": "general mills",
       "adzuna_search": "General Mills logistics",
@@ -49,6 +54,7 @@
       "ticker": "K",
       "cik": "0000055067",
       "name": "Kellanova",
+      "trends_search": "Pringles",
       "reddit_keywords": ["Kellanova", "Pringles", "Cheez-It"],
       "fda_search": "kellogg",
       "adzuna_search": "Kellanova supply chain",
@@ -58,6 +64,7 @@
     {
       "ticker": "CPB",
       "name": "Campbell's",
+      "trends_search": "Campbell soup",
       "reddit_keywords": ["Campbell's", "Goldfish", "V8"],
       "fda_search": "campbell",
       "adzuna_search": "Campbell Soup supply",
@@ -67,6 +74,7 @@
     {
       "ticker": "SJM",
       "name": "J.M. Smucker",
+      "trends_search": "Jif peanut butter",
       "reddit_keywords": ["Smucker's", "Jif", "Folgers"],
       "fda_search": "smucker",
       "adzuna_search": "J.M. Smucker logistics",
@@ -76,6 +84,7 @@
     {
       "ticker": "CAG",
       "name": "Conagra",
+      "trends_search": "Slim Jim",
       "reddit_keywords": ["Conagra", "Slim Jim", "Healthy Choice"],
       "fda_search": "conagra",
       "adzuna_search": "Conagra Brands supply",
@@ -85,6 +94,7 @@
     {
       "ticker": "HRL",
       "name": "Hormel",
+      "trends_search": "Hormel",
       "reddit_keywords": ["Hormel", "SPAM", "Skippy"],
       "fda_search": "hormel",
       "adzuna_search": "Hormel Foods logistics",
@@ -94,6 +104,7 @@
     {
       "ticker": "HSY",
       "name": "Hershey",
+      "trends_search": "Hershey chocolate",
       "reddit_keywords": ["Hershey", "Reese's", "Kit Kat"],
       "fda_search": "hershey",
       "adzuna_search": "Hershey supply chain",
@@ -103,6 +114,7 @@
     {
       "ticker": "MKC",
       "name": "McCormick",
+      "trends_search": "McCormick spices",
       "reddit_keywords": ["McCormick", "Old Bay", "French's"],
       "fda_search": "mccormick",
       "adzuna_search": "McCormick spice supply",
@@ -112,6 +124,7 @@
     {
       "ticker": "CLX",
       "name": "Clorox",
+      "trends_search": "Clorox",
       "reddit_keywords": ["Clorox", "Pine-Sol", "Brita"],
       "fda_search": "clorox",
       "adzuna_search": "Clorox supply chain",
@@ -121,6 +134,7 @@
     {
       "ticker": "CHD",
       "name": "Church & Dwight",
+      "trends_search": "Arm and Hammer",
       "reddit_keywords": ["Arm & Hammer", "OxiClean"],
       "fda_search": "church dwight",
       "adzuna_search": "Church & Dwight logistics",
@@ -130,6 +144,7 @@
     {
       "ticker": "ENR",
       "name": "Energizer",
+      "trends_search": "Energizer batteries",
       "reddit_keywords": ["Energizer", "Duracell replacement"],
       "fda_search": "energizer",
       "adzuna_search": "Energizer battery supply",
@@ -139,6 +154,7 @@
     {
       "ticker": "COTY",
       "name": "Coty",
+      "trends_search": "CoverGirl",
       "reddit_keywords": ["Coty", "CoverGirl", "Rimmel"],
       "fda_search": "coty",
       "adzuna_search": "Coty logistics",
@@ -148,6 +164,7 @@
     {
       "ticker": "EL",
       "name": "Estée Lauder",
+      "trends_search": "Estee Lauder",
       "reddit_keywords": ["Estée Lauder", "Clinique", "M·A·C"],
       "fda_search": "estee lauder",
       "adzuna_search": "Estée Lauder supply chain",
@@ -157,6 +174,7 @@
     {
       "ticker": "CL",
       "name": "Colgate",
+      "trends_search": "Colgate toothpaste",
       "reddit_keywords": ["Colgate", "Palmolive"],
       "fda_search": "colgate",
       "adzuna_search": "Colgate-Palmolive supply",
@@ -166,6 +184,7 @@
     {
       "ticker": "RBGLY",
       "name": "Reckitt",
+      "trends_search": "Lysol",
       "reddit_keywords": ["Reckitt", "Lysol", "Dettol"],
       "fda_search": "reckitt",
       "adzuna_search": "Reckitt Benckiser supply",
@@ -175,6 +194,7 @@
     {
       "ticker": "NWL",
       "name": "Newell Brands",
+      "trends_search": "Sharpie",
       "reddit_keywords": ["Newell", "Rubbermaid", "Sharpie"],
       "fda_search": "newell brands",
       "adzuna_search": "Newell Brands logistics",

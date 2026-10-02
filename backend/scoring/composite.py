@@ -163,6 +163,7 @@ class CompositeScorer:
             "status":           status,
             "degraded_signals": degraded,
             "last_updated":     last_updated,
+            "google_trends_detail": company_data.get("google_trends_detail", {}),
         }
 
     def compute_one(self, ticker: str) -> Optional[Dict[str, Any]]:

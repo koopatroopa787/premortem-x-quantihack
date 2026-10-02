@@ -119,7 +119,8 @@ def fetch_adzuna_job_velocity(company_name):
     ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
 
     if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
-        return 0
+        print("Adzuna credentials unavailable; marking signal degraded")
+        return None
 
     try:
         targeted_queries = [
@@ -158,7 +159,7 @@ def fetch_adzuna_job_velocity(company_name):
         return round(signal, 4)
     except Exception as e:
         print(f"Error fetching Adzuna data: {e}")
-        return 0
+        return None
 
 def run_company_adzuna_pipeline():
     if not COMPANIES_PATH.exists():
@@ -180,7 +181,10 @@ def run_company_adzuna_pipeline():
         
         company_record = store.get(ticker, {})
         signals = company_record.get("signals", {})
-        signals["adzuna_job_velocity"] = signal
+        if signal is None:
+            signals.pop("adzuna_job_velocity", None)
+        else:
+            signals["adzuna_job_velocity"] = signal
         company_record["signals"] = signals
         company_record["updated_at"] = updated_at
         store[ticker] = company_record

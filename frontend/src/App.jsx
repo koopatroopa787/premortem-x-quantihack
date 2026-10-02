@@ -20,33 +20,19 @@ import CanaryBoard from './components/CanaryBoard.jsx';
 import BlameChain from './components/BlameChain.jsx';
 import LiveTicker from './components/LiveTicker.jsx';
 import Backtester from './components/Backtester.jsx';
+import Validation from './components/Validation.jsx';
 
 // ── Preserved Stitch sub-components ──────────────────────────────────────────
 import MetricCard from './components/MetricCard.jsx';
 import DotMatrixIcon from './components/DotMatrixIcon.jsx';
-import ForensicChart from './components/ForensicChart.jsx';
 import SegmentedHealthBar from './components/SegmentedHealthBar.jsx';
 
-const TABS = ['DASHBOARD', 'CANARY BOARD', 'BLAME CHAIN', 'BACKTESTER', 'DOSSIER'];
-
-// ── Mock fallback data ────────────────────────────────────────────────────────
-const MOCK_COMPANIES = [
-  { ticker: 'UL', name: 'Unilever', score: 7.4, status: 'CRITICAL', canary_rank: 1, degraded_signals: [], signals: {} },
-  { ticker: 'HSY', name: 'Hershey', score: 6.8, status: 'CRITICAL', canary_rank: 2, degraded_signals: [], signals: {} },
-  { ticker: 'PG', name: 'P&G', score: 5.2, status: 'ELEVATED', canary_rank: null, degraded_signals: [], signals: {} },
-  { ticker: 'KO', name: 'Coca-Cola', score: 3.8, status: 'STABLE', canary_rank: null, degraded_signals: [], signals: {} },
-  { ticker: 'PEP', name: 'PepsiCo', score: 4.1, status: 'STABLE', canary_rank: null, degraded_signals: [], signals: {} },
-  { ticker: 'GIS', name: 'General Mills', score: 4.5, status: 'STABLE', canary_rank: null, degraded_signals: [], signals: {} },
-  { ticker: 'K', name: 'Kellanova', score: 5.9, status: 'ELEVATED', canary_rank: null, degraded_signals: [], signals: {} },
-  { ticker: 'CPB', name: "Campbell's", score: 5.1, status: 'ELEVATED', canary_rank: null, degraded_signals: [], signals: {} },
-  { ticker: 'SJM', name: 'J.M. Smucker', score: 4.8, status: 'STABLE', canary_rank: null, degraded_signals: [], signals: {} },
-  { ticker: 'CAG', name: 'Conagra', score: 4.3, status: 'STABLE', canary_rank: null, degraded_signals: [], signals: {} },
-];
+const TABS = ['DASHBOARD', 'VALIDATION', 'CANARY BOARD', 'BLAME CHAIN', 'BACKTESTER', 'DOSSIER'];
 
 // ─────────────────────────────────────────────────────────────────────────────
 function App() {
   const [activeTab, setActiveTab] = useState('DASHBOARD');
-  const [companies, setCompanies] = useState(MOCK_COMPANIES);
+  const [companies, setCompanies] = useState([]);
   const [selectedTicker, setSelectedTicker] = useState('UL');
   const [report, setReport] = useState(null);
   const [blameChain, setBlameChain] = useState(null);
@@ -83,13 +69,14 @@ function App() {
         return cached.companies;
       }
     }
-    const data = await api.getCompanies({ fallback: { companies: MOCK_COMPANIES } });
+    const data = await api.getCompanies();
     if (data?.companies?.length > 0) {
       cache.set('companies', data, TTL_COMPANIES);
       setCompanies(data.companies);
       return data.companies;
     }
-    return companies;
+    setCompanies([]);
+    return [];
   }, []);
 
   // ── Fetch company report + blame ──────────────────────────────────────────
@@ -110,6 +97,9 @@ function App() {
       cache.set(cacheKey, data, TTL_REPORT);
       setReport(data);
       setBlameChain(data?.blame_chain || null);
+    } else {
+      setReport(null);
+      setBlameChain(null);
     }
   }, []);
 
@@ -208,11 +198,14 @@ function App() {
     : companies;
 
   // ── Selected company object ───────────────────────────────────────────────
-  const selectedCompany = companies.find(c => c.ticker === selectedTicker) || companies[0] || MOCK_COMPANIES[0];
+  const selectedCompany = companies.find(c => c.ticker === selectedTicker) || companies[0];
 
   // ── Tab content renderer ──────────────────────────────────────────────────
   const renderContent = () => {
     switch (activeTab) {
+
+      case 'VALIDATION':
+        return <Validation selectedTicker={selectedTicker} />;
 
       case 'CANARY BOARD':
         return <CanaryBoard canaries={canaries} />;
@@ -238,17 +231,6 @@ function App() {
           const fda = report?.signals?.fda_recall_velocity?.raw || 0;
           const wiki = report?.signals?.wikipedia_edit_wars?.raw || 0;
           const fred = report?.signals?.fred_macro_backdrop?.raw || 0;
-
-          // Pseudo-history for chart based on ticker to look dynamic
-          const tickerSeed = selectedTicker.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-          const history = [
-            20 + (tickerSeed % 10),
-            35 + (tickerSeed % 15),
-            45 + (tickerSeed % 20),
-            60 + (tickerSeed % 25),
-            55 + (tickerSeed % 30),
-            Math.min(95, (wiki * 100) + 10)
-          ];
 
           return (
             <div className="fade-in">
@@ -277,21 +259,18 @@ function App() {
                   </p>
                 </div>
                 <div className="card">
-                  <div className="metric-label">GOOGLE TRENDS CORRELATION</div>
-                  <div style={{ marginTop: '1rem' }}>
-                    <ForensicChart data={history} labels={['JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOW']} height={80} />
-                  </div>
+                  <div className="metric-label">GOOGLE TRENDS SOURCE QUALITY</div>
                   <p style={{ fontSize: '0.875rem', marginTop: '1rem', lineHeight: 1.6, color: 'var(--on-background)' }}>
-                    {wiki > 0.4
-                      ? `Elevated Wikipedia volatility (intensity: ${wiki.toFixed(2)}) correlates strongly with regional public interest spikes.`
-                      : "Public mentions and digital sentiment appear within nominal baseline ranges."}
+                    {report?.google_trends_detail?.status === 'ok'
+                      ? `Search term: ${report.google_trends_detail.query}. ${report.google_trends_detail.nonzero_days} non-zero days of ${report.google_trends_detail.observations} observations. This measures brand attention, not stock-outs.`
+                      : `Search series unavailable (${report?.google_trends_detail?.status || 'not refreshed'}). No value is inferred.`}
                   </p>
                 </div>
                 <div className="card" style={{ gridColumn: 'span 2' }}>
-                  <div className="metric-label" style={{ marginBottom: '1.5rem' }}>CRITICAL HEALTH INDICATORS (REAL-TIME)</div>
+                  <div className="metric-label" style={{ marginBottom: '1.5rem' }}>LATEST COLLECTED INDICATORS</div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4rem' }}>
-                    <SegmentedHealthBar label="INVENTORY/SALES RATIO" value={fred > 0 ? fred * 100 : 45} />
-                    <SegmentedHealthBar label="FDA RECALL VELOCITY" value={fda > 0 ? fda * 100 : 12} />
+                    <SegmentedHealthBar label="MACRO STRESS INDEX" value={fred * 100} />
+                    <SegmentedHealthBar label="FDA RECALL VELOCITY" value={fda * 100} />
                     <SegmentedHealthBar label="REAL-TIME SENTIMENT" value={Math.max(0, (1 - wiki) * 100)} />
                   </div>
                 </div>
@@ -409,7 +388,7 @@ function App() {
           }}>
             <div className="metric-label" style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '8px' }}>STATUS OVERVIEW</div>
             <div style={{ fontSize: '0.9rem', lineHeight: 1.6, fontWeight: 500 }}>
-              {report?.cause_of_failure?.[0] || 'Surveillance systems at nominal precision. No immediate critical decoupling detected.'}
+              {report?.cause_of_failure?.[0] || 'No current company report is available. Check the API and feed coverage before interpreting risk.'}
             </div>
           </div>
         </aside>
@@ -423,7 +402,7 @@ function App() {
             marginBottom: 'var(--spacing-10)', height: '60px'
           }}>
             {/* Tab Nav */}
-            <nav style={{ display: 'flex', gap: '8px', background: 'var(--surface-container-low)', padding: '6px', borderRadius: 'var(--radius-full)' }}>
+            <nav style={{ display: 'flex', gap: '8px', background: 'var(--surface-container-low)', padding: '6px', borderRadius: 'var(--radius-full)', overflowX: 'auto', maxWidth: '100%' }}>
               {TABS.map(tab => (
                 <button
                   key={tab}
@@ -436,6 +415,7 @@ function App() {
                     borderRadius: 'var(--radius-full)',
                     fontWeight: 700, fontSize: '0.85rem',
                     cursor: 'pointer', fontFamily: 'var(--font-display)',
+                    whiteSpace: 'nowrap',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
                 >

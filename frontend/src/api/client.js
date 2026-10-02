@@ -73,6 +73,11 @@ class ApiClient {
   async getLive(opts) {
     return this._fetch('/live', opts);
   }
+
+  /** Prospective predictions and subsequently observed outcomes. */
+  async getAudit(opts) {
+    return this._fetch('/audit', opts);
+  }
 }
 
 export const api = new ApiClient(import.meta.env.VITE_API_BASE ?? '/api');

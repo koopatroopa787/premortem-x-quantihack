@@ -41,15 +41,17 @@ const DEFAULT_COMPANIES = [
 ];
 
 const SIGNAL_WEIGHTS_DEFAULT = {
-  fda_recall_velocity: 0.35,
-  wikipedia_edit_wars: 0.25,
-  fred_macro_backdrop: 0.20,
+  fda_recall_velocity: 0.25,
+  google_trends: 0.20,
+  wikipedia_edit_wars: 0.20,
+  fred_macro_backdrop: 0.15,
   adzuna_job_velocity: 0.12,
   edgar_8k_keywords: 0.08,
 };
 
 const SIGNAL_META = {
   fda_recall_velocity: { label: "FDA Recall", color: C.red },
+  google_trends: { label: "Brand Search", color: C.amber },
   wikipedia_edit_wars: { label: "Wiki Edit Wars", color: C.purple },
   fred_macro_backdrop: { label: "FRED Macro", color: C.blue },
   adzuna_job_velocity: { label: "Adzuna Jobs", color: C.teal },
@@ -57,9 +59,9 @@ const SIGNAL_META = {
 };
 
 const GROUND_TRUTH_SOURCES = {
-  synthetic: { label: "Synthetic Events", color: C.purple, desc: "AI-generated supply chain stress events with realistic timing" },
-  fda: { label: "FDA Recall Dates", color: C.red, desc: "Historical FDA food enforcement recall classifications as event ground truth" },
-  stock_drop: { label: "Stock Price Drops", color: C.amber, desc: "≥5% drawdown events from synthetic price series as signal targets" },
+  synthetic: { label: "Simulated Stress", color: C.purple, desc: "Generated events and generated signals; not a measured backtest." },
+  fda: { label: "Simulated Recalls", color: C.red, desc: "Recall-like dates are generated, not historical FDA records." },
+  stock_drop: { label: "Simulated Price Drops", color: C.amber, desc: "Generated price shocks and generated signals." },
 };
 
 const STRATEGY_MODES = {
@@ -426,6 +428,9 @@ export default function BacktesterV2() {
         </div>
       </div>
 
+      <div style={{ maxWidth: 1260, margin: "16px auto 0", padding: "12px 24px", color: C.red, background: C.redFaint, border: `1px solid ${C.red}40`, borderRadius: 8, fontSize: 12, lineHeight: 1.5 }}>
+        Scenario simulator only. Events, price paths and historical signals here are generated; its win rate and P&amp;L do not measure the live model. Use the Validation tab for sealed calls checked against real FDA records.
+      </div>
       <div style={{ display: "flex", maxWidth: 1260, margin: "0 auto", padding: "20px 24px", gap: 20, position: "relative", zIndex: 1 }}>
 
         {/* ── Left sidebar ── */}
@@ -434,7 +439,7 @@ export default function BacktesterV2() {
           {/* Ground truth source */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 16 }}>
             <div style={{ fontFamily: C.mono, fontSize: 9, color: C.textSec, letterSpacing: "0.15em", marginBottom: 12 }}>
-              // GROUND TRUTH SOURCE
+              // SIMULATED SCENARIO
             </div>
             {Object.entries(GROUND_TRUTH_SOURCES).map(([k, v]) => (
               <div key={k} onClick={() => { setSource(k); setRan(false); }} style={{

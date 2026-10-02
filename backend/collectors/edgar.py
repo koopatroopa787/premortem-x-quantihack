@@ -255,7 +255,7 @@ def fetch_edgar_8k_score(ticker: str, max_filings: int = MAX_8K_LOOKBACK, cik: s
         return round(final_score, 4)
     except Exception as exc:
         print(f"Error fetching EDGAR data for {ticker}: {exc}")
-        return 0.0
+        return None
 
 
 def fetch_edgar_signal(ticker: str, max_filings: int = MAX_8K_LOOKBACK) -> float:
@@ -284,7 +284,10 @@ def run_company_edgar_pipeline():
         
         company_record = store.get(ticker, {})
         signals = company_record.get("signals", {})
-        signals["edgar_8k_keywords"] = signal
+        if signal is None:
+            signals.pop("edgar_8k_keywords", None)
+        else:
+            signals["edgar_8k_keywords"] = signal
         company_record["signals"] = signals
         company_record["updated_at"] = updated_at
         store[ticker] = company_record

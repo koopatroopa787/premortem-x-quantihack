@@ -38,10 +38,16 @@ def test_too_little_history_is_unknown_not_zero():
     assert trends_velocity([10.0] * 20) is None
 
 
+def test_sparse_search_is_unknown_not_a_spike():
+    # An isolated hit for an obscure shortage phrase is not a usable baseline.
+    assert trends_velocity([0.0] * 45 + [100.0] + [0.0] * 14) is None
+
+
 if __name__ == "__main__":
     test_flat_interest_is_no_signal()
     test_spike_registers()
     test_mild_rise_is_partial()
     test_decline_floors_at_zero()
     test_too_little_history_is_unknown_not_zero()
+    test_sparse_search_is_unknown_not_a_spike()
     print("trends velocity checks passed")

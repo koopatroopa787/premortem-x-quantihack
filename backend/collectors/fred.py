@@ -148,7 +148,11 @@ def run_company_fred_pipeline() -> dict:
         ticker = company["ticker"]
         company_record = store.get(ticker, {})
         signals = company_record.get("signals", {})
-        signals["fred_macro_backdrop"] = float(macro.get("fred", 0.0))
+        if macro.get("error"):
+            signals.pop("fred_macro_backdrop", None)
+            print(f"  ! FRED unavailable for {ticker}: {macro['error']}")
+        else:
+            signals["fred_macro_backdrop"] = float(macro["fred"])
 
         company_record["signals"] = signals
         company_record["fred_detail"] = macro

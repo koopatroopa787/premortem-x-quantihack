@@ -157,7 +157,7 @@ def discover_related_pages(
                 f"{len(collected_titles)} titles: {exc}",
                 file=sys.stderr,
             )
-            break
+            raise
 
         pages = payload.get("query", {}).get("pages", {})
         for page_data in pages.values():
@@ -224,10 +224,7 @@ def fetch_recent_revisions(page_title: str, limit: int = 200) -> List[Dict]:
         "rvprop": "timestamp|user|comment",
         "redirects": 1,
     }
-    try:
-        payload = wiki_request(params)
-    except Exception:
-        return []
+    payload = wiki_request(params)
 
     pages = payload.get("query", {}).get("pages", {})
     for page_data in pages.values():
@@ -448,17 +445,21 @@ def run_company_wiki_pipeline() -> Dict:
 
     for company in companies:
         ticker = company["ticker"]
-        result = aggregate_company_wiki_signal(
-            ticker=ticker,
-            company_name=company.get("name", ticker),
-            seed_page=company.get("wiki_page", company.get("name", ticker)),
-            keywords=company.get("reddit_keywords", []),
-            baseline_store=baseline_store,
-        )
-
         company_record = store.get(ticker, {})
         signals = company_record.get("signals", {})
-        signals["wikipedia_edit_wars"] = format_wiki_signal(result.get("wikipedia_edit_wars", 0.0))
+        try:
+            result = aggregate_company_wiki_signal(
+                ticker=ticker,
+                company_name=company.get("name", ticker),
+                seed_page=company.get("wiki_page", company.get("name", ticker)),
+                keywords=company.get("reddit_keywords", []),
+                baseline_store=baseline_store,
+            )
+            signals["wikipedia_edit_wars"] = format_wiki_signal(result["wikipedia_edit_wars"])
+        except Exception as exc:
+            print(f"  ! Wikipedia unavailable for {ticker}: {exc}", file=sys.stderr)
+            signals.pop("wikipedia_edit_wars", None)
+            result = {"error": str(exc), "updated_at": datetime.now(timezone.utc).isoformat()}
         company_record["signals"] = signals
         company_record["wiki_detail"] = result
         # Scoring is handled by the API

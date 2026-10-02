@@ -26,10 +26,10 @@ for _p in [_BACKEND, _ROOT]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from scoring.composite   import CompositeScorer
+from scoring.composite   import CompositeScorer, WEIGHTS
 from scoring.canary      import CanaryRanker
 from scoring.blame_chain import BlameChainAnalyser
-from scoring.backtest    import BacktestEngine
+from backend.scoring.forecast_audit import LEDGER_PATH, audit_summary
 
 LIVE_SNAPSHOT_PATH = os.path.join(_HERE, "..", "store", "live_snapshot.json")
 
@@ -45,7 +45,6 @@ logger = logging.getLogger("premortem")
 scorer     = CompositeScorer()
 ranker     = CanaryRanker()
 blamer     = BlameChainAnalyser()
-backtester = BacktestEngine()
 
 # ─── App ──────────────────────────────────────────────────────────────────────
 app = FastAPI(
@@ -103,12 +102,12 @@ def _cause_of_failure(report: Dict[str, Any], blame: Dict[str, Any]) -> List[str
             f" — Source: openFDA Enforcement Reports"
         )
 
-    # Google Trends replaces Reddit as the consumer OOS signal
+    # Search-interest changes can corroborate attention, not prove shortages.
     trends = signals.get("google_trends", {})
     if trends.get("raw", 0) >= 0.5:
         causes.append(
-            f"Consumer: Google Trends OOS search velocity elevated"
-            f" ({trends['raw']:.0%}) — Source: pytrends"
+            f"Consumer attention: Google Trends brand-search velocity elevated"
+            f" ({trends['raw']:.0%}); this is not proof of a shortage"
         )
 
     wiki = signals.get("wikipedia_edit_wars", {})
@@ -171,11 +170,21 @@ def _confidence(score: float, degraded: List[str]) -> float:
     return round(max(0.0, base - penalty), 2)
 
 
+def _feed_coverage(companies: List[Dict[str, Any]]) -> Dict[str, Dict[str, int]]:
+    return {
+        name: {
+            "available": sum(bool(co.get("signals", {}).get(name, {}).get("available")) for co in companies),
+            "total": len(companies),
+        }
+        for name in WEIGHTS
+    }
+
+
 # ─── Endpoints ────────────────────────────────────────────────────────────────
 
 @app.get("/health")
 async def health():
-    """Server status and active feed list."""
+    """Server status and observed feed coverage, not a static 'all active' claim."""
     feeds = [
         "fda_recall_velocity",
         "wikipedia_edit_wars",
@@ -184,7 +193,12 @@ async def health():
         "edgar_8k_keywords",
         "google_trends",
     ]
-    return JSONResponse({"status": "ok", "feeds": feeds, "uptime": _now_iso()})
+    companies, _ = _safe_call(scorer.compute_all)
+    return JSONResponse({
+        "status": "ok", "feeds": feeds,
+        "feed_coverage": _feed_coverage(companies or []),
+        "checked_at": _now_iso(),
+    })
 
 
 @app.get("/companies")
@@ -212,7 +226,8 @@ async def get_companies():
     return JSONResponse({
         "companies":    companies,
         "updated_at":   _now_iso(),
-        "feeds_active": 6,
+        "feeds_active": sum(row["available"] > 0 for row in _feed_coverage(companies).values()),
+        "feed_coverage": _feed_coverage(companies),
     })
 
 
@@ -229,30 +244,15 @@ async def get_company_report(ticker: str):
             status_code=503,
         )
 
-    # Parallel lookups — all fail-safe
+    # Blame-chain lookup is best-effort. Synthetic legacy backtest numbers are
+    # deliberately not included in a company report.
     all_scores, _ = _safe_call(scorer.compute_all)
     blame, _      = _safe_call(blamer.analyse, ticker, all_scores)
-    backtest, _   = _safe_call(backtester.run)
 
     blame    = blame    or {}
-    backtest = backtest or {}
 
     score    = report.get("score", 0.0)
     degraded = report.get("degraded_signals", [])
-
-    # Per-company backtest data with meaningful global fallbacks.
-    # Fallback values (19d, 71%) are the validated global averages — never zero.
-    bt_per_co = backtest.get("per_company", {}).get(ticker, {})
-    bt_summary = {
-        "avg_lead_days":  bt_per_co.get("avg_lead",  backtest.get("avg_lead_days",  19)),
-        "accuracy_rate":  bt_per_co.get("accuracy",  backtest.get("accuracy_rate",  0.71)),
-        "events_analysed": bt_per_co.get("events",   backtest.get("events_analysed", 20)),
-        "methodology":    backtest.get(
-            "methodology",
-            "Composite signal backtested against 20 real CPG events, 2021-2024."
-            " Fracture Lead Time = days before event score crossed threshold.",
-        ),
-    }
 
     return JSONResponse({
         "report_title":     "PRELIMINARY POST-MORTEM REPORT",
@@ -261,13 +261,15 @@ async def get_company_report(ticker: str):
         "ticker":           ticker,
         "name":             report.get("name", ticker),
         "confidence":       _confidence(score, degraded),
+        "confidence_kind":  "uncalibrated_score_transform",
         "tod_estimate":     _tod_estimate(score),
+        "tod_kind":         "untested_score_band_heuristic",
         "status":           report.get("status", "STABLE"),
         "score":            score,
         "signals":          report.get("signals", {}),
+        "google_trends_detail": report.get("google_trends_detail", {}),
         "degraded_signals": degraded,
         "blame_chain":      blame,
-        "backtest_summary": bt_summary,
         "cause_of_failure": _cause_of_failure(report, blame),
     })
 
@@ -364,6 +366,17 @@ def _load_store_file(filename: str) -> Dict[str, Any]:
     except (OSError, ValueError) as exc:
         logger.warning("could not read %s: %s", filename, exc)
         return {}
+
+
+@app.get("/audit")
+async def get_prediction_audit():
+    """Prospective forecast ledger and non-overlapping matured outcome counts."""
+    return JSONResponse(audit_summary(_load_store_file(LEDGER_PATH.name)))
+
+
+@app.get("/audit/{ticker}")
+async def get_company_prediction_audit(ticker: str):
+    return JSONResponse(audit_summary(_load_store_file(LEDGER_PATH.name), ticker))
 
 
 @app.get("/news/{ticker}")

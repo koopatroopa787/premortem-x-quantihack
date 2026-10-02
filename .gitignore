@@ -10,3 +10,4 @@ venv/
 backend/store/live_snapshot.json
 backend/store/news.json
 backend/store/signal_history.json
+backend/store/prediction_ledger.json

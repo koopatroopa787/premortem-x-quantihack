@@ -185,10 +185,17 @@ def run_company_fda_pipeline(limit: int = 100) -> Dict:
         ticker = company["ticker"]
         fda_query = company.get("fda_search", company.get("name", ticker))
         recall_payload = fetch_fda_recalls(fda_query, limit=limit)
-        scored = calculate_recall_signal(recall_payload.get("results", []))
         company_record = store.get(ticker, {"signals": {}, "fda_detail": {}})
-        company_record["signals"]["fda_recall_velocity"] = float(scored.get("fda", 0.0))
-        company_record["fda_detail"] = {**scored, "query": fda_query, "updated_at": updated_at}
+        if recall_payload.get("error"):
+            company_record["signals"].pop("fda_recall_velocity", None)
+            company_record["fda_detail"] = {
+                "error": recall_payload["error"], "query": fda_query,
+                "updated_at": updated_at,
+            }
+        else:
+            scored = calculate_recall_signal(recall_payload.get("results", []))
+            company_record["signals"]["fda_recall_velocity"] = float(scored["fda"])
+            company_record["fda_detail"] = {**scored, "query": fda_query, "updated_at": updated_at}
         company_record["updated_at"] = updated_at
         store[ticker] = company_record
     _save_json(DATA_STORE_PATH, store)

@@ -75,7 +75,7 @@ def _fetch_page(url: str, firm: str, skip: int) -> Dict[str, Any]:
         except requests.RequestException as exc:
             if attempt == 2:
                 print(f"  ! {url} {firm} failed: {exc}", file=sys.stderr)
-                return {"results": []}
+                raise
             sleep(1.0 * (attempt + 1))
     return {"results": []}
 
@@ -135,6 +135,10 @@ def fetch_company_events(firm: str) -> List[Dict[str, Any]]:
 
 def run_fda_events_pipeline() -> Dict[str, Any]:
     companies = json.loads(COMPANIES_PATH.read_text(encoding="utf-8"))["companies"]
+    previous = (
+        json.loads(EVENTS_PATH.read_text(encoding="utf-8"))
+        if EVENTS_PATH.exists() else {}
+    )
 
     store: Dict[str, Any] = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -145,11 +149,23 @@ def run_fda_events_pipeline() -> Dict[str, Any]:
     for company in companies:
         ticker = company["ticker"]
         firm = company.get("fda_search") or company["name"]
-        events = fetch_company_events(firm)
+        try:
+            events = fetch_company_events(firm)
+            complete = True
+            error = None
+        except Exception as exc:
+            # Preserve prior evidence but never treat a failed request as
+            # proof that no recall occurred.
+            events = previous.get("companies", {}).get(ticker, {}).get("events", [])
+            complete = False
+            error = str(exc)[:200]
+            print(f"  ! FDA event refresh failed for {ticker}: {error}", file=sys.stderr)
         store["companies"][ticker] = {
             "firm_query": firm,
             "event_count": len(events),
             "events": events,
+            "collection_complete": complete,
+            "error": error,
         }
         classes = {}
         for e in events:
@@ -157,7 +173,9 @@ def run_fda_events_pipeline() -> Dict[str, Any]:
         print(f"  {ticker:6s} {len(events):4d} events  {classes}")
         sleep(0.3)
 
-    EVENTS_PATH.write_text(json.dumps(store, indent=2), encoding="utf-8")
+    temporary = EVENTS_PATH.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(store, indent=2), encoding="utf-8")
+    temporary.replace(EVENTS_PATH)
     total = sum(c["event_count"] for c in store["companies"].values())
     print(f"\nWrote {total} real recall events to {EVENTS_PATH}")
     return store

@@ -28,32 +28,6 @@ const SIGNAL_ORDER = [
 // anything. The card below now shows the real evaluation from /evaluation, and
 // shows nothing at all when no evaluation has been run.
 
-const MOCK_REPORT = {
-  report_title: 'PRELIMINARY POST-MORTEM REPORT',
-  case_number: 'PMM-2026-UL-0328',
-  filed_at: '2026-03-28T10:23:00Z',
-  ticker: 'UL',
-  name: 'Unilever',
-  confidence: 0.74,
-  tod_estimate: '60-90 days',
-  status: 'CRITICAL',
-  score: 7.4,
-  cause_of_failure: [
-    'FDA: High recall velocity signal — Source: openFDA Enforcement Reports',
-    'Consumer: Google Trends OOS search velocity elevated (72%) — Source: pytrends',
-    'Supply chain: Shared supplier with 3 companies, 1 currently CRITICAL',
-  ],
-  signals: {
-    fda_recall_velocity: { raw: 0.80, weighted: 0.200, available: true },
-    google_trends: { raw: 0.65, weighted: 0.130, available: true },
-    wikipedia_edit_wars: { raw: 0.50, weighted: 0.100, available: true },
-    fred_macro_backdrop: { raw: 0.40, weighted: 0.060, available: true },
-    adzuna_job_velocity: { raw: 0.35, weighted: 0.042, available: true },
-    edgar_8k_keywords: { raw: 0.20, weighted: 0.016, available: false },
-  },
-  stale: false,
-};
-
 // ── Signal bar component ───────────────────────────────────────────────────────
 function SignalBar({ label, signal, available }) {
   const rawPct = Math.round((signal?.raw ?? 0) * 100);
@@ -106,9 +80,9 @@ function SignalBar({ label, signal, available }) {
 
 // ── Main component ─────────────────────────────────────────────────────────────
 export default function PremortemReport({ report: reportProp, loading }) {
-  const report = reportProp || MOCK_REPORT;
-  const isStale = report.stale === true;
-  const confPct = Math.round((report.confidence ?? 0) * 100);
+  const report = reportProp;
+  const isStale = report?.stale === true;
+  const confPct = Math.round((report?.confidence ?? 0) * 100);
 
   // Measured performance against real FDA recalls, or nothing. No substitutions.
   const [evaluation, setEvaluation] = useState(null);
@@ -143,6 +117,10 @@ export default function PremortemReport({ report: reportProp, loading }) {
         </div>
       </div>
     );
+  }
+
+  if (!report) {
+    return <div className="card">The company report is unavailable. No example data is being shown as live intelligence.</div>;
   }
 
   return (
@@ -225,7 +203,7 @@ export default function PremortemReport({ report: reportProp, loading }) {
               fontFamily: 'var(--font-labels)',
               color: 'white',
             }}>
-              EST. TOD: {report.tod_estimate || 'IMMUTABLE'}
+              UNTESTED DATE BAND: {report.tod_estimate || 'NONE'}
             </div>
           </div>
         </div>
@@ -260,7 +238,7 @@ export default function PremortemReport({ report: reportProp, loading }) {
             </div>
           </div>
           <div className="metric-label" style={{ fontSize: '0.65rem' }}>
-            PRECISION CONFIDENCE
+            SCORE-DERIVED INDEX · NOT A PROBABILITY
           </div>
         </div>
       </div>
@@ -411,9 +389,8 @@ export default function PremortemReport({ report: reportProp, loading }) {
             fontStyle: 'italic',
             fontFamily: 'var(--font-body)',
           }}>
-            Signals are normalised per-company against baseline variance.
-            Degraded signals are inferred from secondary FRED and Wikipedia streams.
-            Reddit signal removed — replaced with Google Trends OOS velocity.
+            Unavailable signals are excluded and the remaining weights are rescaled.
+            Google Trends measures brand search attention, not confirmed stock-outs.
           </div>
         </div>
       </div>

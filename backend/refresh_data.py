@@ -15,6 +15,7 @@ from backend.collectors.edgar import run_company_edgar_pipeline
 from backend.collectors.trends import run_company_trends_pipeline
 from backend.collectors.news import run_company_news_pipeline
 from backend.collectors.fda_events import run_fda_events_pipeline
+from backend.scoring.forecast_audit import run_daily_audit
 
 def refresh_all():
     print("\n" + "="*50)
@@ -32,12 +33,22 @@ def refresh_all():
         ("FDA event ground truth", run_fda_events_pipeline),
     ]
     
+    successful = 0
     for name, func in collectors:
         try:
             print(f"📡 Syncing {name}...")
             func()
+            successful += 1
         except Exception as e:
             print(f"❌ Error syncing {name}: {e}")
+
+    if successful >= 5:
+        try:
+            run_daily_audit()
+        except Exception as exc:
+            print(f"❌ Prediction audit failed: {exc}")
+    else:
+        print("⚠️ Prediction audit skipped: too many collectors failed")
             
     print("\n✅ All available signals synchronized to data_store.json")
     print("="*50 + "\n")

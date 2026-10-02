@@ -77,6 +77,7 @@ export function statusToLabel(status) {
 /** human-readable signal key labels */
 const SIGNAL_LABELS = {
   fda_recall_velocity: 'FDA Recall Velocity',
+  google_trends: 'Google Brand Search Attention',
   reddit_oos_velocity: 'Reddit OOS Velocity',
   wikipedia_edit_wars: 'Wikipedia Edit Wars',
   fred_macro_backdrop: 'FRED Macro Backdrop',
