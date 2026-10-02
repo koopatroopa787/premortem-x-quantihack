@@ -138,14 +138,6 @@ def _cause_of_failure(report: Dict[str, Any], blame: Dict[str, Any]) -> List[str
             f" keyword density ({edgar['raw']:.0%}) — Source: EDGAR"
         )
 
-    path = blame.get("propagation_path", [])
-    if path:
-        crit_connected = sum(1 for p in path if p.get("score", 0) >= 7.0)
-        causes.append(
-            f"Supply chain: Shared supplier with {len(path)} companies,"
-            f" {crit_connected} currently CRITICAL"
-        )
-
     if not causes:
         causes.append(
             "All signal levels within normal operating range — monitoring continues"

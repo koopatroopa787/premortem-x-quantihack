@@ -7,19 +7,10 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { formatScore, statusToClass } from '../utils/formatters.js';
 
-// Fallback mock data for demo resilience
-const MOCK_CANARIES = [
-  { rank: 1, ticker: 'UL',   name: 'Unilever',         avg_lead_days: 28, current_signal: 7.4, canary_score: 18.2, historical_events_count: 9,  interpretation: 'Unilever has historically signalled sector stress 28 days before other companies.' },
-  { rank: 2, ticker: 'HSY',  name: 'Hershey',           avg_lead_days: 23, current_signal: 6.8, canary_score: 16.6, historical_events_count: 7,  interpretation: 'Hershey has historically signalled sector stress 23 days before other companies.' },
-  { rank: 3, ticker: 'MDLZ', name: 'Mondelez',          avg_lead_days: 19, current_signal: 6.2, canary_score: 14.1, historical_events_count: 6,  interpretation: 'Mondelez is a reliable early-warning signal with a 19-day average lead time.' },
-  { rank: 4, ticker: 'K',    name: "Kellogg's",         avg_lead_days: 15, current_signal: 5.9, canary_score: 12.3, historical_events_count: 5,  interpretation: "Kellogg's shows supply disruption 15 days ahead of broader sector." },
-  { rank: 5, ticker: 'PG',   name: 'Procter & Gamble',  avg_lead_days: 12, current_signal: 5.2, canary_score: 10.8, historical_events_count: 4,  interpretation: 'P&G acts as a moderate canary with a 12-day average lead in past events.' },
-];
-
 const MAX_LEAD_DAYS = 35;
 
 export default function CanaryBoard({ canaries: canariesProp }) {
-  const canaries = (canariesProp && canariesProp.length > 0) ? canariesProp : MOCK_CANARIES;
+  const canaries = canariesProp || [];
   const [flashTicker, setFlashTicker] = useState(null);
 
   const highlight = useCallback((ticker) => {
@@ -29,10 +20,14 @@ export default function CanaryBoard({ canaries: canariesProp }) {
 
   return (
     <div className="fade-in" style={{ maxWidth: '1000px' }}>
-      <div className="metric-label" style={{ color: 'var(--primary)', marginBottom: '12px' }}>RANKED FORENSIC EARLY-WARNING SYSTEMS</div>
+      <div className="metric-label" style={{ color: 'var(--primary)', marginBottom: '12px' }}>EXPERIMENTAL RANKING</div>
       <h2 className="display-lg" style={{ marginBottom: 'var(--spacing-10)', fontSize: '2.5rem' }}>
         Canary Leaderboard
       </h2>
+      <p style={{ color: 'var(--secondary)', lineHeight: 1.6, marginTop: '-20px', marginBottom: '24px' }}>
+        Current scores are collected data. Lead-day assumptions are seeded examples, not measured historical lead times; this ranking is illustrative until validated.
+      </p>
+      {!canaries.length && <div className="card">Canary data is unavailable. No example leaderboard is being substituted.</div>}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {canaries.map((c, idx) => {
@@ -94,7 +89,7 @@ export default function CanaryBoard({ canaries: canariesProp }) {
                   }}>
                     {c.avg_lead_days}
                   </div>
-                  <div className="metric-label" style={{ fontSize: '0.6rem' }}>DAYS LEAD AVG</div>
+                  <div className="metric-label" style={{ fontSize: '0.6rem' }}>ASSUMED LEAD DAYS</div>
                 </div>
               </div>
 
@@ -116,7 +111,7 @@ export default function CanaryBoard({ canaries: canariesProp }) {
                 fontFamily: 'var(--font-body)',
                 fontStyle: 'italic'
               }}>
-                {c.interpretation}
+                Illustrative lead-time assumption; current score {formatScore(c.current_signal)}/10 ({c.status}).
               </div>
             </div>
           );

@@ -104,8 +104,8 @@ class CanaryRanker:
             status = _status_label(current_score)
             name = company.get("name", ticker)
             interpretation = (
-                f"{name} has historically signalled sector stress {int(avg_lead)} days "
-                f"before other companies. Current signal is {status}."
+                f"Illustrative {int(avg_lead)}-day lead assumption for {name}; "
+                f"not measured from real events. Current score status is {status}."
             )
 
             ranked.append({
@@ -116,6 +116,7 @@ class CanaryRanker:
                 "canary_score":            canary_score,
                 "historical_events_count": events_count,
                 "interpretation":          interpretation,
+                "evidence_level":          "seeded_example_not_validated",
                 "status":                  status,
             })
 

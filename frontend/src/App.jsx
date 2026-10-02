@@ -237,25 +237,25 @@ function App() {
               <h2 className="display-lg" style={{ marginBottom: '2rem' }}>EVIDENCE DOSSIER: {selectedCompany?.name}</h2>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
                 <div className="card" style={{ height: 'fit-content' }}>
-                  <div className="metric-label">SEC 8-K NLP ANALYSIS</div>
+                  <div className="metric-label">SEC 8-K KEYWORD HEURISTIC</div>
                   <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
                     <div style={{ flex: 1, padding: '1rem', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-md)' }}>
                       <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)' }}>
                         {edgar.toFixed(2)}
                       </div>
-                      <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--secondary)' }}>HEDGING FREQUENCY</div>
+                      <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--secondary)' }}>DISRUPTION-TERM SCORE</div>
                     </div>
                     <div style={{ flex: 1, padding: '1rem', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-md)' }}>
                       <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)' }}>
-                        {(edgar * -85).toFixed(0)}%
+                        SEC 8-K
                       </div>
-                      <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--secondary)' }}>SENTIMENT DELTA</div>
+                      <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--secondary)' }}>SOURCE DOCUMENTS</div>
                     </div>
                   </div>
                   <p style={{ fontSize: '0.875rem', marginTop: '1rem', lineHeight: 1.6, color: 'var(--on-background)' }}>
                     {edgar > 0.4
-                      ? "Detected linguistic patterns indicate high-level uncertainty regarding 'Operational Resilience'. The management team has pivoted to passive styling."
-                      : "Regulatory filings show stable executive sentiment. Linguistic markers for 'Hedging' are within historical standard deviations."}
+                      ? 'Recent filings contain elevated disruption-related terms. This is a keyword heuristic, not a verified operational incident.'
+                      : 'No elevated disruption-keyword signal in the latest collected filings. This does not prove operations are unaffected.'}
                   </p>
                 </div>
                 <div className="card">
@@ -271,7 +271,7 @@ function App() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4rem' }}>
                     <SegmentedHealthBar label="MACRO STRESS INDEX" value={fred * 100} />
                     <SegmentedHealthBar label="FDA RECALL VELOCITY" value={fda * 100} />
-                    <SegmentedHealthBar label="REAL-TIME SENTIMENT" value={Math.max(0, (1 - wiki) * 100)} />
+                    <SegmentedHealthBar label="WIKIPEDIA EDIT STRESS" value={wiki * 100} />
                   </div>
                 </div>
               </div>

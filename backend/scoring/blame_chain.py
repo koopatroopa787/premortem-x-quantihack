@@ -158,7 +158,7 @@ class BlameChainAnalyser:
                     "confidence":    confidence,
                     "lag_days":      _lag_for_ticker(t) + 15,
                     "current_score": score,
-                    "alert":         "NOT YET PRICED IN",
+                    "alert":         "ILLUSTRATIVE LINK ONLY",
                 }
 
         origin_supplier = _find_origin_supplier(pz_ticker, graph)
@@ -173,4 +173,5 @@ class BlameChainAnalyser:
             "propagation_path": propagation,
             "next_victim":      next_victim,
             "origin_supplier":  origin_supplier,
+            "graph_source":     "seeded_example_not_verified_suppliers",
         }
