@@ -46,6 +46,7 @@ class Poller {
 
     try {
       const data = await this._fn();
+      if (data?.error) throw new Error(data.message || 'Endpoint error');
 
       // Success — reset error tracking
       if (this._errCount > 0) {
